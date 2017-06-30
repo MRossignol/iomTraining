@@ -1,0 +1,34 @@
+<!doctype html>
+<html ng-app="iomTraining">
+
+  <head>
+    <meta charset="utf-8" />
+    <title>Acoustic Level</title>
+    <script src="angular.min.js"></script>
+    <script src="utils.js"></script>
+    <script src="app.js"></script>
+    <script src="iomController.js"></script>
+    <script src="clickDetector.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <link href='https://fonts.googleapis.com/css?family=Cousine:700' rel='stylesheet' type='text/css'> </head>
+
+  <body id="body">
+    <div class="page" ng-controller="iomController">
+
+	Set the sensitivity by vertical swipe or top / bottom arrows (left to reset) <br>  <br>
+	Current sensitivity: {{sensitivity}}
+  <br>
+click:  {{clickDetected}}
+<br>
+  power:   {{power}}
+</div>
+      <div id="base">
+        <div id="lapTime">
+	    <br>
+	</div>
+
+
+      </div>
+    </div>
+  </body>
+</html>
