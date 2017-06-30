@@ -109,7 +109,7 @@ app.controller("iomController", function($scope, $timeout, $interval, $window) {
     }
 
     var update = function(){
-$scope.power = detector.power;
+$scope.power = detector.power.toFixed(4);
 if (detector.clickDetected) {
   detector.clickDetected = 0;
   $scope.clickDetected = 1;
