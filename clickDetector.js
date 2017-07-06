@@ -28,19 +28,24 @@ function createDetector(audioContext, fftSize, lobeSize) {
 	processor.onaudioprocess = computePower;
 	processor.lobeSize = lobeSize || 3;
 
-  analyzer = new AnalyserNode(audioContext);
-	analyzer.fftSize = fftSize;
-	analyzer.connect(processor);
+	analyser = new AnalyserNode(audioContext);
+	analyser.fftSize = fftSize;
+	analyser.connect(processor);
 	processor.connect(audioContext.destination);
-	analyzer.power = 0;
-  analyzer.buffer = [];
-	analyzer.clickDetected = 0;
+	analyser.power = 0;
+	analyser.buffer = [];
+	analyser.clickDetected = 0;
+	analyser.computingAverage = .0;
+	analyser.computingAverageNumber = 0;
+	analyser.sensitivity = 1;
+	analyser.average = 1.0;
+	analyser.averageNumber = 0;
 	processor.shutdown =
-		function(){
-			this.disconnect();
-			this.onaudioprocess = null;
-		};
-	return analyzer;
+	function(){
+		this.disconnect();
+		this.onaudioprocess = null;
+	};
+	return analyser;
 }
 
 function computePower( event ) {
@@ -48,33 +53,39 @@ function computePower( event ) {
 	//var array = event.inputBuffer.getChannelData(0);
 	//var bufLength = array.length;
 
-	  var bufLength = analyzer.frequencyBinCount;
-	 var array =  new Float32Array(bufLength);
-	  analyzer.getFloatFrequencyData(array);
-  	var skipLength = Math.ceil(bufLength/6);
+	var bufLength = analyser.frequencyBinCount;
+	var array =  new Float32Array(bufLength);
+	analyser.getFloatFrequencyData(array);
+	var skipLength = Math.ceil(bufLength/6);
 
-    var sum = 0;
-    // Do a root-mean-square on the samples: sum up the squares...
-    for (var i=skipLength*2; i<bufLength-skipLength; i++) {
-    	sum += Math.pow(10, array[i]/20);
-    }
-		sum /= bufLength-skipLength*3;
+	var sum = 0;
+	// Do a root-mean-square on the samples: sum up the squares...
+	for (var i=skipLength*2; i<bufLength-skipLength; i++) {
+		sum += Math.pow(10, array[i]/20);
+	}
+	sum /= bufLength-skipLength*3;
 
-    // ... then take the square root of the sum.
-    // Now smooth this out with the averaging factor applied
-    // to the previous sample - take the max here because we
-    // want "fast attack, slow release."
-//		console.log(bufLength+' '+skipLength+' '+sum);
+	analyser.computingAverage += sum;
+	analyser.computingAverageNumber += 1;
 
+	if (analyser.averageNumber == 0 && analyser.computingAverageNumber == 1000) {
+			analyser.average = analyser.computingAverage/analyser.computingAverageNumber ;
+			analyser.averageNumber == 1;
+	}
+	if (analyser.computingAverageNumber == 100000) {
+			analyser.average = analyser.computingAverage/analyser.computingAverageNumber ;
+			analyser.computingAverage = .0;
+			analyser.computingAverageNumber = 0;
+	}
 
-		if (analyzer.buffer.length == this.lobeSize*3) {
-			  analyzer.power = analyzer.buffer[this.lobeSize]*(analyzer.buffer[this.lobeSize]/(analyzer.buffer[0]+analyzer.buffer[this.lobeSize*3-1]));
-			analyzer.buffer.shift();
-		}
-	  analyzer.buffer.push(sum);
-analyzer.power *=10000;
- if (analyzer.power >.5) {
-	 analyzer.clickDetected=1;
- }
-
+	if (analyser.buffer.length == this.lobeSize*3) {
+		analyser.power = analyser.buffer[this.lobeSize]*(analyser.buffer[this.lobeSize]/(analyser.buffer[0]+analyser.buffer[this.lobeSize*3-1]));
+		analyser.buffer.shift();
+	}
+	analyser.buffer.push(sum);
+	console.log(analyser.power+" "+analyser.average+" "+analyser.sensitivity);
+	analyser.power /= analyser.average;
+	if (analyser.power>analyser.sensitivity) {
+		analyser.clickDetected=1;
+	}
 }
