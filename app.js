@@ -1,5 +1,5 @@
 
-var app = angular.module('iomTraining', []);
+var app = angular.module('iomTraining', ['rzModule', 'ui.bootstrap']);
 
 app.config(['$compileProvider',
 		 function($compileProvider) {

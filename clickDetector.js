@@ -83,7 +83,7 @@ function computePower( event ) {
 		analyser.buffer.shift();
 	}
 	analyser.buffer.push(sum);
-	console.log(analyser.power+" "+analyser.average+" "+analyser.sensitivity);
+//	console.log(analyser.power+" "+analyser.average+" "+analyser.sensitivity);
 	analyser.power /= analyser.average;
 	if (analyser.power>analyser.sensitivity) {
 		analyser.clickDetected=1;

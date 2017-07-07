@@ -8,6 +8,15 @@ app.controller("iomController", function($scope, $timeout, $interval, $window) {
   $scope.clickDetected = 0;
   $scope.move = 0;
 
+  $scope.debugSlider = {
+    value: 50,
+    options: {
+      floor: 0,
+      ceil: 100,
+      showSelectionBar: true
+    }
+  };
+
   function startup() {
     var el = document.getElementsByTagName("body")[0];
     el.addEventListener("touchstart", handleStart, false);
@@ -110,7 +119,7 @@ app.controller("iomController", function($scope, $timeout, $interval, $window) {
 
     var update = function(){
       detector.sensitivity = $scope.sensitivity;
-      
+
       $scope.power = detector.power.toFixed(4);
       if (detector.clickDetected) {
         detector.clickDetected = 0;
@@ -118,7 +127,6 @@ app.controller("iomController", function($scope, $timeout, $interval, $window) {
         $timeout(function(){$scope.clickDetected = 0;}, 1000);
       }
       $timeout(function(){update()}, 50);
-
     }
 
     startup();
