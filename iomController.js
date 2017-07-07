@@ -17,6 +17,9 @@ app.controller("iomController", function($scope, $timeout, $interval, $window) {
     }
   };
 
+  var noSleep = new NoSleep();
+  noSleep.enable();
+  
   function startup() {
     var el = document.getElementsByTagName("body")[0];
     el.addEventListener("touchstart", handleStart, false);
