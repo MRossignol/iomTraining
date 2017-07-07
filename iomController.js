@@ -7,6 +7,8 @@ app.controller("iomController", function($scope, $timeout, $interval, $window) {
   $scope.power = 0;
   $scope.clickDetected = 0;
   $scope.move = 0;
+  $scope.wakeLockEnabled = false;
+  $scope.wakeValue = "Wake Lock is disabled";
 
   $scope.debugSlider = {
     value: 50,
@@ -18,8 +20,20 @@ app.controller("iomController", function($scope, $timeout, $interval, $window) {
   };
 
   var noSleep = new NoSleep();
-  noSleep.enable();
-  
+
+  $scope.wake = function() {
+    console.log($scope.wakeLockEnabled)
+   if (!$scope.wakeLockEnabled) {
+     noSleep.enable(); // keep the screen on!
+     $scope.wakeLockEnabled = true;
+     $scope.wakeValue = "Wake Lock is enabled";
+   } else {
+     noSleep.disable(); // let the screen turn off.
+     $scope.wakeLockEnabled = false;
+     $scope.wakeValue = "Wake Lock is disabled";
+   }
+ }
+
   function startup() {
     var el = document.getElementsByTagName("body")[0];
     el.addEventListener("touchstart", handleStart, false);

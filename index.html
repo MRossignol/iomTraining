@@ -21,6 +21,7 @@
 
   <body id="body">
     <div class="page" ng-controller="iomController">
+      <input type="button" ng-click='wake()' ng-value="wakeValue" />
 
       <h2>Debug slider</h2>
       <rzslider
@@ -35,13 +36,6 @@ click:  {{clickDetected}}
 <br>
   power:   {{power}}
 </div>
-      <div id="base">
-        <div id="lapTime">
-	    <br>
-	</div>
-
-
-      </div>
     </div>
   </body>
 </html>
