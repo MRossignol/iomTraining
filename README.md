@@ -1,5 +1,15 @@
 # iomTraining
 
+TODO
+  improve detector by considering a larger array of value (2 sec)
+  half of the buffer is for statistic computation half is for detection
+  peak detection by peak power over mean power and click detection.
+
+  play start sequence
+  play sound at best leg timing of run
+
+  store data (date location weather)
+
 The purpose of this webApp is to allow me to improve my iom skills.
 
 Tuning of detector with two sliders for level and peak level detection
