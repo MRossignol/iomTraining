@@ -68,7 +68,7 @@ function computePower( event ) {
 	analyser.computingAverage += sum;
 	analyser.computingAverageNumber += 1;
 
-	if (analyser.averageNumber == 0 && analyser.computingAverageNumber == 1000) {
+	if (analyser.averageNumber == 0 && analyser.computingAverageNumber == 100) {
 			analyser.average = analyser.computingAverage/analyser.computingAverageNumber ;
 			analyser.averageNumber == 1;
 	}
