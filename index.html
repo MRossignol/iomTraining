@@ -32,8 +32,14 @@
 
       <h2>Sensitivity</h2>
       <rzslider
-      data-rz-slider-model="tuneSlider.value"
-      data-rz-slider-options="tuneSlider.options"
+      data-rz-slider-model="sensitivitySlider.value"
+      data-rz-slider-options="sensitivitySlider.options"
+      ></rzslider>
+
+      <h2>Power</h2>
+      <rzslider
+      data-rz-slider-model="powerSlider.value"
+      data-rz-slider-options="powerSlider.options"
       ></rzslider>
 
 
@@ -42,9 +48,9 @@
       {{legType}}wind leg number {{legNumber}}
 </div>
       <br>
-      Current sensitivity: {{sensitivityAverage}} Max {{sensitivityMax}} Threshold: {{sensitivityThreshold}}
+      Current sensitivity: {{sensitivityAverage}} Max {{sensitivityMax}} Threshold: {{sensitivitySlider.value}}
       <br>
-      Current power: {{powerAverage}} Max {{powerMax}} Threshold: {{powerThreshold}}
+      Current power: {{powerAverage}} Max {{powerMax}} Threshold: {{powerSlider.value}}
       <br>
       click:  {{clickDetected}}
       <br>

@@ -7,8 +7,6 @@ app.controller("iomController", function($scope, $timeout, $interval, $window) {
   var detector = null;
   $scope.sensitivity = 0;
   $scope.power = 0;
-  $scope.sensitivityThreshold = 1;
-  $scope.powerThreshold = 1;
   $scope.clickDetected = 0;
   $scope.move = 0;
   $scope.wakeLockEnabled = false;
@@ -37,13 +35,26 @@ app.controller("iomController", function($scope, $timeout, $interval, $window) {
     }
   };
 
-  $scope.tuneSlider = {
-    value: 50,
+  $scope.sensitivitySlider = {
+    value: 1.2,
     options: {
-      floor: 0,
-      ceil: 100,
-      step: 1,
-      showTicks: true,
+      floor: 1,
+      ceil: 2,
+      step: 0.1,
+      precision: 1,
+      showTicks: .2,
+      showSelectionBar: true
+    }
+  };
+
+  $scope.powerSlider = {
+    value: 3,
+    options: {
+      floor: 1,
+      ceil: 10,
+      step: 0.2,
+      precision: 1,
+      showTicks: .5,
       showSelectionBar: true
     }
   };
@@ -121,8 +132,8 @@ app.controller("iomController", function($scope, $timeout, $interval, $window) {
 
     var update = function(){
       if(detector) {
-        detector.sensitivityThreshold = $scope.sensitivityThreshold;
-        detector.powerThreshold = $scope.powerThreshold;
+        detector.sensitivityThreshold = $scope.sensitivitySlider.value;
+        detector.powerThreshold = $scope.powerSlider.value;
         $scope.power = detector.power.toFixed(2);
         $scope.sensitivity = detector.sensitivity.toFixed(2);
         $scope.powerAverage = detector.powerAverage/detector.powerBuffer.length;

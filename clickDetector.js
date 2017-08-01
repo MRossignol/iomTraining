@@ -90,7 +90,7 @@ function clickDetect( event ) {
 
 
 	if (analyser.buffer.length == 400) {
-		analyser.sensitivity = (analyser.buffer[this.lobeSize+200]/(analyser.buffer[200]+analyser.buffer[this.lobeSize*3+200]));
+		analyser.sensitivity = 2*analyser.buffer[this.lobeSize+200]/(analyser.buffer[200]+analyser.buffer[this.lobeSize*3+200]);
 
 		analyser.power =  analyser.buffer[200]/(analyser.average/400);
 
@@ -106,6 +106,7 @@ function clickDetect( event ) {
 		analyser.sensitivityMax = Math.max.apply(null, analyser.sensitivityBuffer);
 
 		//console.log(analyser.peakValue+ " "+analyser.power+ " "+analyser.average/400);
+		//console.log(analyser.powerThreshold+" "+analyser.sensitivityThreshold);
 		if (analyser.power>analyser.powerThreshold && analyser.sensitivity>analyser.sensitivityThreshold) {
 			analyser.clickDetected=1;
 			// analyser.active = false;
