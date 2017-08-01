@@ -40,7 +40,7 @@ app.controller("iomController", function($scope, $timeout, $interval, $window) {
     options: {
       floor: 1,
       ceil: 2,
-      step: 0.1,
+      step: 0.05,
       precision: 1,
       showTicks: .2,
       showSelectionBar: true
@@ -48,7 +48,7 @@ app.controller("iomController", function($scope, $timeout, $interval, $window) {
   };
 
   $scope.powerSlider = {
-    value: 3,
+    value: 2,
     options: {
       floor: 1,
       ceil: 10,
@@ -148,10 +148,10 @@ app.controller("iomController", function($scope, $timeout, $interval, $window) {
 
         if ($scope.clickDetected == 0) {
           nextLeg();
+          $timeout(function(){$scope.clickDetected = 0;}, 2000);
         }
         $scope.clickDetected += 1;
-        $timeout(function(){$scope.clickDetected = 0;}, 1000);
-        $timeout(function(){detector.active = true; detector.clickDetected = 0;}, 200);
+        $timeout(function(){detector.active = true; detector.clickDetected = 0;}, 100);
       }
     }
     $scope.currentDuration = new Date().getTime()-timing;
