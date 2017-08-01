@@ -5,6 +5,7 @@ app.controller("iomController", function($scope, $timeout, $interval, $window) {
   var meter = null;
   var timing = 0;
   var detector = null;
+  var okBuffer = null;
   $scope.sensitivity = 0;
   $scope.power = 0;
   $scope.clickDetected = 0;
@@ -61,6 +62,29 @@ app.controller("iomController", function($scope, $timeout, $interval, $window) {
 
   var noSleep = new NoSleep();
 
+  function onError(){console.log('Unable to load audio data');}
+
+  function loadSound(url) {
+    var request = new XMLHttpRequest();
+    request.open('GET', url, true);
+    request.responseType = 'arraybuffer';
+
+    // Decode asynchronously
+    request.onload = function() {
+      audioContext.decodeAudioData(request.response, function(buffer) {
+        okBuffer = buffer;
+      }, onError);
+    }
+    request.send();
+  }
+
+  function playSound(buffer) {
+  var source = audioContext.createBufferSource(); // creates a sound source
+  console.log(buffer);
+  source.buffer = buffer;                    // tell the source which sound to play
+  source.connect(audioContext.destination);       // connect the source to the context's destination (the speakers)
+  source.start(0);
+}
 
 
   $scope.wake = function() {
@@ -151,6 +175,7 @@ app.controller("iomController", function($scope, $timeout, $interval, $window) {
           $timeout(function(){$scope.clickDetected = 0;}, 2000);
         }
         $scope.clickDetected += 1;
+        playSound(okBuffer);
         $timeout(function(){detector.active = true; detector.clickDetected = 0;}, 100);
       }
     }
@@ -208,6 +233,10 @@ app.controller("iomController", function($scope, $timeout, $interval, $window) {
   }
 
    launchDetector();
+
+   loadSound('sounds/ok.wav');
+    // $timeout(function(){playSound(okBuffer)}, 500);
+
 
 
     document.onkeydown = function(e) {
