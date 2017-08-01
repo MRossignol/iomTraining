@@ -37,10 +37,17 @@ function createDetector(audioContext, fftSize, lobeSize) {
 	analyser.clickDetected = 0;
 	analyser.computingAverage = .0;
 	analyser.computingAverageNumber = 0;
-	analyser.sensitivity = 1;
+	analyser.sensitivity = 0;
 	analyser.average = 0;
 	analyser.averageNumber = 0;
   analyser.active = true;
+	analyser.powerBuffer = [];
+	analyser.powerAverage = 0;
+	analyser.powerMax = 0;
+	analyser.sensitivityBuffer = [];
+	analyser.sensitivityAverage = 0;
+	analyser.sensitivityMax = 0;
+
 	// analyser.activeDelay = 0;
 	processor.shutdown =
 	function(){
@@ -81,13 +88,25 @@ function clickDetect( event ) {
 		analyser.average -= analyser.buffer.shift();
 	}
 
+
 	if (analyser.buffer.length == 400) {
-		analyser.peakValue = (analyser.buffer[this.lobeSize+200]/(analyser.buffer[200]+analyser.buffer[this.lobeSize*3+200]));
+		analyser.sensitivity = (analyser.buffer[this.lobeSize+200]/(analyser.buffer[200]+analyser.buffer[this.lobeSize*3+200]));
 
 		analyser.power =  analyser.buffer[200]/(analyser.average/400);
-		analyser.power *= analyser.peakValue;
+
+		analyser.powerBuffer.push(analyser.power)
+		analyser.sensitivityBuffer.push(analyser.sensitivity);
+		analyser.powerAverage += analyser.power;
+		analyser.sensitivityAverage += analyser.sensitivity;
+		if (analyser.powerBuffer.length > 200) {
+			analyser.powerAverage -= analyser.powerBuffer.shift();
+			analyser.sensitivityAverage -= analyser.sensitivityBuffer.shift();
+		}
+		analyser.powerMax = Math.max.apply(null, analyser.powerBuffer);
+		analyser.sensitivityMax = Math.max.apply(null, analyser.sensitivityBuffer);
+
 		//console.log(analyser.peakValue+ " "+analyser.power+ " "+analyser.average/400);
-		if (analyser.power>analyser.sensitivity) {
+		if (analyser.power>analyser.powerThreshold && analyser.sensitivity>analyser.sensitivityThreshold) {
 			analyser.clickDetected=1;
 			// analyser.active = false;
 			// console.log(analyser.clickDetected);

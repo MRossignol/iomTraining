@@ -5,8 +5,10 @@ app.controller("iomController", function($scope, $timeout, $interval, $window) {
   var meter = null;
   var timing = 0;
   var detector = null;
-  $scope.sensitivity = 1;
+  $scope.sensitivity = 0;
   $scope.power = 0;
+  $scope.sensitivityThreshold = 1;
+  $scope.powerThreshold = 1;
   $scope.clickDetected = 0;
   $scope.move = 0;
   $scope.wakeLockEnabled = false;
@@ -119,8 +121,16 @@ app.controller("iomController", function($scope, $timeout, $interval, $window) {
 
     var update = function(){
       if(detector) {
-      detector.sensitivity = $scope.sensitivity;
-      $scope.power = detector.power.toFixed(4);
+        detector.sensitivityThreshold = $scope.sensitivityThreshold;
+        detector.powerThreshold = $scope.powerThreshold;
+        $scope.power = detector.power.toFixed(2);
+        $scope.sensitivity = detector.sensitivity.toFixed(2);
+        $scope.powerAverage = detector.powerAverage/detector.powerBuffer.length;
+        $scope.powerAverage = $scope.powerAverage.toFixed(2);
+        $scope.sensitivityAverage = detector.sensitivityAverage/detector.sensitivityBuffer.length;
+        $scope.sensitivityAverage = $scope.sensitivityAverage.toFixed(2);
+        $scope.powerMax = detector.powerMax.toFixed(2);
+        $scope.sensitivityMax = detector.sensitivityMax.toFixed(2);
 
       if (detector.clickDetected && detector.active) {
         detector.active = false;
