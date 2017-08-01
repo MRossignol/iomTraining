@@ -120,19 +120,21 @@ app.controller("iomController", function($scope, $timeout, $interval, $window) {
     var update = function(){
       if(detector) {
       detector.sensitivity = $scope.sensitivity;
-
       $scope.power = detector.power.toFixed(4);
-      if (detector.clickDetected) {
-        detector.clickDetected = 0;
+
+      if (detector.clickDetected && detector.active) {
+        detector.active = false;
+
         if ($scope.clickDetected == 0) {
-          //  nextLeg();
+          nextLeg();
         }
-        $scope.clickDetected = 1;
+        $scope.clickDetected += 1;
         $timeout(function(){$scope.clickDetected = 0;}, 1000);
+        $timeout(function(){detector.active = true; detector.clickDetected = 0;}, 200);
       }
     }
     $scope.currentDuration = new Date().getTime()-timing;
-      $timeout(function(){update()}, 50);
+      $timeout(function(){update()}, 100);
     }
 
     launchDetector = function(){
@@ -180,12 +182,12 @@ app.controller("iomController", function($scope, $timeout, $interval, $window) {
         mediaStreamSource.connect(detector);
 
         // kick off the visual updating
-
+  update();
       }
   }
 
-  // launchDetector();
-            update();
+   launchDetector();
+
 
     document.onkeydown = function(e) {
       switch (e.keyCode) {
@@ -199,10 +201,10 @@ app.controller("iomController", function($scope, $timeout, $interval, $window) {
         $scope.sensitivity -= .1;
         $scope.sensitivity = Math.max($scope.sensitivity, 1);
         break;
-        case 76:
+        case 76: // l
         nextLeg();
         break;
-        case 83:
+        case 83: // s
         $scope.startFunc();
         break;
       }

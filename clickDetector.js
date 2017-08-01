@@ -25,7 +25,7 @@ SOFTWARE.
 function createDetector(audioContext, fftSize, lobeSize) {
 	fftSize = fftSize || 256;
 	var processor = audioContext.createScriptProcessor(fftSize);
-	processor.onaudioprocess = computePower;
+	processor.onaudioprocess = clickDetect;
 	processor.lobeSize = lobeSize || 3;
 
 	analyser = new AnalyserNode(audioContext);
@@ -38,8 +38,10 @@ function createDetector(audioContext, fftSize, lobeSize) {
 	analyser.computingAverage = .0;
 	analyser.computingAverageNumber = 0;
 	analyser.sensitivity = 1;
-	analyser.average = 1.0;
+	analyser.average = 0;
 	analyser.averageNumber = 0;
+  analyser.active = true;
+	// analyser.activeDelay = 0;
 	processor.shutdown =
 	function(){
 		this.disconnect();
@@ -48,16 +50,14 @@ function createDetector(audioContext, fftSize, lobeSize) {
 	return analyser;
 }
 
-function computePower( event ) {
+function clickDetect( event ) {
 
-	//var array = event.inputBuffer.getChannelData(0);
-	//var bufLength = array.length;
-
+  // retrieve fft data
 	var bufLength = analyser.frequencyBinCount;
 	var array =  new Float32Array(bufLength);
 	analyser.getFloatFrequencyData(array);
 	var skipLength = Math.ceil(bufLength/6);
-
+  // get energy in selected bands (mid high)
 	var sum = 0;
 	// Do a root-mean-square on the samples: sum up the squares...
 	for (var i=skipLength*2; i<bufLength-skipLength; i++) {
@@ -65,27 +65,74 @@ function computePower( event ) {
 	}
 	sum /= bufLength-skipLength*3;
 
-	analyser.computingAverage += sum;
-	analyser.computingAverageNumber += 1;
-
-	if (analyser.averageNumber == 0 && analyser.computingAverageNumber == 100) {
-			analyser.average = analyser.computingAverage/analyser.computingAverageNumber ;
-			analyser.averageNumber == 1;
-	}
-	if (analyser.computingAverageNumber == 100000) {
-			analyser.average = analyser.computingAverage/analyser.computingAverageNumber ;
-			analyser.computingAverage = .0;
-			analyser.computingAverageNumber = 0;
-	}
-
-	if (analyser.buffer.length == this.lobeSize*3) {
-		analyser.power = analyser.buffer[this.lobeSize]*(analyser.buffer[this.lobeSize]/(analyser.buffer[0]+analyser.buffer[this.lobeSize*3-1]));
-		analyser.buffer.shift();
-	}
+// if (analyser.active == false) {
+// 	analyser.activeDelay++;
+// 	if (analyser.activeDelay>40) {
+// 		analyser.active = true;
+// 		analyser.activeDelay=0;
+// 	}
+// }
+//console.log(analyser.active+" "+analyser.activeDelay);
+ // fill buffer
 	analyser.buffer.push(sum);
-//	console.log(analyser.power+" "+analyser.average+" "+analyser.sensitivity);
-	analyser.power /= analyser.average;
-	if (analyser.power>analyser.sensitivity) {
-		analyser.clickDetected=1;
+	// maintain average value
+	analyser.average += sum;
+	if (analyser.buffer.length > 400) {
+		analyser.average -= analyser.buffer.shift();
+	}
+
+	if (analyser.buffer.length == 400) {
+		analyser.peakValue = (analyser.buffer[this.lobeSize+200]/(analyser.buffer[200]+analyser.buffer[this.lobeSize*3+200]));
+
+		analyser.power =  analyser.buffer[200]/(analyser.average/400);
+		analyser.power *= analyser.peakValue;
+		//console.log(analyser.peakValue+ " "+analyser.power+ " "+analyser.average/400);
+		if (analyser.power>analyser.sensitivity) {
+			analyser.clickDetected=1;
+			// analyser.active = false;
+			// console.log(analyser.clickDetected);
+		}
 	}
 }
+
+// function computePower( event ) {
+//
+// 	//var array = event.inputBuffer.getChannelData(0);
+// 	//var bufLength = array.length;
+//
+// 	var bufLength = analyser.frequencyBinCount;
+// 	var array =  new Float32Array(bufLength);
+// 	analyser.getFloatFrequencyData(array);
+// 	var skipLength = Math.ceil(bufLength/6);
+//
+// 	var sum = 0;
+// 	// Do a root-mean-square on the samples: sum up the squares...
+// 	for (var i=skipLength*2; i<bufLength-skipLength; i++) {
+// 		sum += Math.pow(10, array[i]/20);
+// 	}
+// 	sum /= bufLength-skipLength*3;
+//
+// 	analyser.computingAverage += sum;
+// 	analyser.computingAverageNumber += 1;
+//
+// 	if (analyser.averageNumber == 0 && analyser.computingAverageNumber == 100) {
+// 			analyser.average = analyser.computingAverage/analyser.computingAverageNumber ;
+// 			analyser.averageNumber == 1;
+// 	}
+// 	if (analyser.computingAverageNumber == 100000) {
+// 			analyser.average = analyser.computingAverage/analyser.computingAverageNumber ;
+// 			analyser.computingAverage = .0;
+// 			analyser.computingAverageNumber = 0;
+// 	}
+//
+// 	if (analyser.buffer.length == this.lobeSize*3) {
+// 		analyser.power = analyser.buffer[this.lobeSize]*(analyser.buffer[this.lobeSize]/(analyser.buffer[0]+analyser.buffer[this.lobeSize*3-1]));
+// 		analyser.buffer.shift();
+// 	}
+// 	analyser.buffer.push(sum);
+// //	console.log(analyser.power+" "+analyser.average+" "+analyser.sensitivity);
+// 	analyser.power /= analyser.average;
+// 	if (analyser.power>analyser.sensitivity) {
+// 		analyser.clickDetected=1;
+// 	}
+// }

@@ -1,6 +1,8 @@
 # iomTraining
 
 TODO
+  slider with number of clicks
+  
   improve detector by considering a larger array of value (2 sec)
   half of the buffer is for statistic computation half is for detection
   peak detection by peak power over mean power and click detection.
