@@ -39,7 +39,7 @@ app.controller("iomController", function($scope, $timeout, $interval, $window) {
     value: 1.2,
     options: {
       floor: 1,
-      ceil: 2,
+      ceil: 5,
       step: 0.05,
       precision: 1,
       showTicks: .2,

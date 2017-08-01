@@ -48,11 +48,11 @@
       {{legType}}wind leg number {{legNumber}}
 </div>
       <br>
-      Current sensitivity: {{sensitivityAverage}} Max {{sensitivityMax}} Threshold: {{sensitivitySlider.value}}
+      Current sensitivity: {{sensitivityAverage}} <span ng-class="{redstyle: sensitivityMax>sensitivitySlider.value}"> Max </span> {{sensitivityMax}} Threshold: {{sensitivitySlider.value}}
       <br>
-      Current power: {{powerAverage}} Max {{powerMax}} Threshold: {{powerSlider.value}}
+      Current power: {{powerAverage}} <span ng-class="{redstyle: powerMax>powerSlider.value}"> Max </span> {{powerMax}} Threshold: {{powerSlider.value}}
       <br>
-      click:  {{clickDetected}}
+      <span ng-class="{redstyle: clickDetected}"> CLICK </span> {{clickDetected}}
       <br>
 
       <svg style="width: 100%; height: 200px;">
