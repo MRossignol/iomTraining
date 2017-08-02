@@ -230,10 +230,10 @@ app.controller("iomController", function($scope, $timeout, $interval, $window) {
         $scope.power = detector.power.toFixed(2);
         $scope.sensitivity = detector.sensitivity.toFixed(2);
         $scope.powerAverage = detector.powerAverage/detector.powerBuffer.length;
-        $scope.powerAverage = $scope.powerAverage.toFixed(2);
+        $scope.powerAverage = $scope.powerAverage.toFixed(4);
         $scope.sensitivityAverage = detector.sensitivityAverage/detector.sensitivityBuffer.length;
         $scope.sensitivityAverage = $scope.sensitivityAverage.toFixed(2);
-        $scope.powerMax = detector.powerMax.toFixed(2);
+        $scope.powerMax = detector.powerMax.toFixed(4);
         $scope.sensitivityMax = detector.sensitivityMax.toFixed(2);
 
       if (detector.clickDetected && detector.active) {
