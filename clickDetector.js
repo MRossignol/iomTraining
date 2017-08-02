@@ -34,11 +34,13 @@ function createDetector(audioContext, fftSize, lobeSize) {
 	processor.connect(audioContext.destination);
 	analyser.power = 0;
 	analyser.buffer = [];
+	analyser.bufferFull = [];
 	analyser.clickDetected = 0;
 	analyser.computingAverage = .0;
 	analyser.computingAverageNumber = 0;
 	analyser.sensitivity = 0;
 	analyser.average = 0;
+	analyser.averageFull = 0;
 	analyser.averageNumber = 0;
   analyser.active = true;
 	analyser.powerBuffer = [];
@@ -64,41 +66,49 @@ function clickDetect( event ) {
 	var array =  new Float32Array(bufLength);
 	analyser.getFloatFrequencyData(array);
 	var skipLength = Math.ceil(bufLength/6);
-  // get energy in selected bands (mid high)
+	// get energy in selected bands (mid high)
 	var sum = 0;
-	// Do a root-mean-square on the samples: sum up the squares...
-	for (var i=skipLength*2; i<bufLength-skipLength; i++) {
-		sum += Math.pow(10, array[i]/20);
+	var sumFull = 0;
+	for (var i=0; i<bufLength; i++) {
+		if (i>=skipLength*2&&i<bufLength-skipLength){
+			sum += Math.pow(10, array[i]/20);
+		}
+		sumFull += Math.pow(10, array[i]/20);
 	}
 	sum /= bufLength-skipLength*3;
-
-// if (analyser.active == false) {
-// 	analyser.activeDelay++;
-// 	if (analyser.activeDelay>40) {
-// 		analyser.active = true;
+	sumFull /= bufLength;
+	// if (analyser.active == false) {
+	// 	analyser.activeDelay++;
+	// 	if (analyser.activeDelay>40) {
+	// 		analyser.active = true;
 // 		analyser.activeDelay=0;
 // 	}
 // }
 //console.log(analyser.active+" "+analyser.activeDelay);
  // fill buffer
-	analyser.buffer.push(sum);
-	// maintain average value
-	analyser.average += sum;
-	if (analyser.buffer.length > 400) {
-		analyser.average -= analyser.buffer.shift();
-	}
-
+ analyser.buffer.push(sum);
+ // maintain average value
+ analyser.average += sum;
+ if (analyser.buffer.length > 400) {
+	 analyser.average -= analyser.buffer.shift();
+ }
+ analyser.bufferFull.push(sumFull);
+ // maintain average value
+ analyser.averageFull += sumFull;
+ if (analyser.bufferFull.length > 400) {
+ 	analyser.averageFull -= analyser.bufferFull.shift();
+ }
 
 	if (analyser.buffer.length == 400) {
 		analyser.sensitivity = 2*analyser.buffer[this.lobeSize+200]/(analyser.buffer[200]+analyser.buffer[this.lobeSize*3+200]);
 
-		analyser.power =  analyser.buffer[200]/(analyser.average/400);
+		analyser.power =  analyser.buffer[200]/(analyser.averageFull/400);
 
 		analyser.powerBuffer.push(analyser.power)
 		analyser.sensitivityBuffer.push(analyser.sensitivity);
 		analyser.powerAverage += analyser.power;
 		analyser.sensitivityAverage += analyser.sensitivity;
-		if (analyser.powerBuffer.length > 200) {
+		if (analyser.powerBuffer.length > 100) {
 			analyser.powerAverage -= analyser.powerBuffer.shift();
 			analyser.sensitivityAverage -= analyser.sensitivityBuffer.shift();
 		}

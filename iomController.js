@@ -1,3 +1,44 @@
+function BufferLoader(context, urlList, callback) {
+	this.context = context;
+    this.urlList = urlList;
+    this.onload = callback;
+    this.bufferList = new Array();
+    this.loadCount = 0;
+}
+
+BufferLoader.prototype.loadBuffer = function(url, index) {
+    var request = new XMLHttpRequest();
+    request.open("GET", url, true);
+    request.responseType = "arraybuffer";
+
+    var loader = this;
+
+    request.onload = function() {
+        loader.context.decodeAudioData(
+            request.response,
+            function(buffer) {
+                if (!buffer) {
+                    alert('error decoding file data: ' + url);
+                    return;
+                }
+                loader.bufferList[index] = buffer;
+                if (++loader.loadCount == loader.urlList.length)
+                    loader.onload(loader.bufferList);
+            }
+        );
+    }
+
+    request.onerror = function() {
+        alert('BufferLoader: XHR error');
+    }
+
+    request.send();
+}
+
+BufferLoader.prototype.load = function() {
+    for (var i = 0; i < this.urlList.length; ++i)
+        this.loadBuffer(this.urlList[i], i);
+}
 
 app.controller("iomController", function($scope, $timeout, $interval, $window) {
   var audioContext = null;
@@ -5,7 +46,7 @@ app.controller("iomController", function($scope, $timeout, $interval, $window) {
   var meter = null;
   var timing = 0;
   var detector = null;
-  var okBuffer = null;
+  var bufferLoader = null;
   $scope.sensitivity = 0;
   $scope.power = 0;
   $scope.clickDetected = 0;
@@ -30,6 +71,17 @@ app.controller("iomController", function($scope, $timeout, $interval, $window) {
     options: {
       floor: 1,
       ceil: 10,
+      step: 1,
+      showTicks: true,
+      showSelectionBar: true
+    }
+  };
+
+  $scope.clickSlider = {
+    value: 1,
+    options: {
+      floor: 1,
+      ceil: 5,
       step: 1,
       showTicks: true,
       showSelectionBar: true
@@ -62,26 +114,43 @@ app.controller("iomController", function($scope, $timeout, $interval, $window) {
 
   var noSleep = new NoSleep();
 
-  function onError(){console.log('Unable to load audio data');}
+  // function onError(){console.log('Unable to load audio data');}
 
-  function loadSound(url) {
-    var request = new XMLHttpRequest();
-    request.open('GET', url, true);
-    request.responseType = 'arraybuffer';
+  // function loadSound(url) {
+  //   var request = new XMLHttpRequest();
+  //   request.open('GET', url, true);
+  //   request.responseType = 'arraybuffer';
+  //
+  //   // Decode asynchronously
+  //   request.onload = function() {
+  //     audioContext.decodeAudioData(request.response, function(buffer) {
+  //       okBuffer = buffer;
+  //     }, onError);
+  //   }
+  //   request.send();
+  // }
 
-    // Decode asynchronously
-    request.onload = function() {
-      audioContext.decodeAudioData(request.response, function(buffer) {
-        okBuffer = buffer;
-      }, onError);
-    }
-    request.send();
+  function loadSounds() {
+    bufferLoader = new BufferLoader(
+       audioContext,
+       [
+         'sounds/ok.wav',
+         'sounds/tick.wav',
+         'sounds/startVrc.webm',
+       ],
+       finishedLoading
+       );
+     bufferLoader.load();
   }
 
-  function playSound(buffer) {
+  function finishedLoading(){
+    console.log('Done with loading audio files.');
+  }
+
+  function playSound(id) {
   var source = audioContext.createBufferSource(); // creates a sound source
-  console.log(buffer);
-  source.buffer = buffer;                    // tell the source which sound to play
+  // console.log(buffer);
+  source.buffer = bufferLoader.bufferList[id];                    // tell the source which sound to play
   source.connect(audioContext.destination);       // connect the source to the context's destination (the speakers)
   source.start(0);
 }
@@ -171,11 +240,13 @@ app.controller("iomController", function($scope, $timeout, $interval, $window) {
         detector.active = false;
 
         if ($scope.clickDetected == 0) {
-          nextLeg();
           $timeout(function(){$scope.clickDetected = 0;}, 2000);
         }
         $scope.clickDetected += 1;
-        playSound(okBuffer);
+        if ($scope.clickDetected>=$scope.clickSlider.value) {
+          nextLeg();
+          playSound(0);
+        }
         $timeout(function(){detector.active = true; detector.clickDetected = 0;}, 100);
       }
     }
@@ -234,7 +305,7 @@ app.controller("iomController", function($scope, $timeout, $interval, $window) {
 
    launchDetector();
 
-   loadSound('sounds/ok.wav');
+   loadSounds();
     // $timeout(function(){playSound(okBuffer)}, 500);
 
 
