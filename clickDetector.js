@@ -23,7 +23,7 @@ SOFTWARE.
 */
 
 function createDetector(audioContext, fftSize, lobeSize) {
-	fftSize = fftSize || 256;
+	fftSize = fftSize || 512;
 	var processor = audioContext.createScriptProcessor(fftSize);
 	processor.onaudioprocess = clickDetect;
 	processor.lobeSize = lobeSize || 3;
