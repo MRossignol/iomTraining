@@ -78,7 +78,7 @@ app.controller("iomController", function($scope, $timeout, $interval, $window) {
   };
 
   $scope.clickSlider = {
-    value: 1,
+    value: 5,
     options: {
       floor: 1,
       ceil: 5,
@@ -303,11 +303,19 @@ app.controller("iomController", function($scope, $timeout, $interval, $window) {
       }
   }
 
-   launchDetector();
+    launchDetector();
 
    loadSounds();
     // $timeout(function(){playSound(okBuffer)}, 500);
 
+    $scope.doClick = function(event){
+        if (event.offsetX<document.getElementById('svg').clientWidth/2) {
+          $scope.clickDetected=1;
+        }
+        else {
+          $scope.clickDetected=0;
+        }
+    };
 
 
     document.onkeydown = function(e) {
