@@ -60,19 +60,27 @@
       <line x1="25%" y1="5%" x2="25%" y2="95%" style="stroke:black;" />
       <line x1="75%" y1="5%" x2="75%" y2="95%" style="stroke:black;" />
 
+      <line x1="40%" y1="90%" x2="60%" y2="90%" style="stroke:black;" />
+      <line x1="50%" y1="87%" x2="50%" y2="93%" style="stroke:black;" />
+
+      <rect ng-repeat="a in race.events" " x="{{50+a.duration/1000}}%" y="85%" rx="10" ry="10" width="2%" height="{{10*(a.type==0)}}%" />
+
+
       <circle ng-show="upLeg&&started" cx="25%" cy="{{(1-currentDuration/(maxDuration*1.2))*90-5}}%"  r="6px" fill="red" />
       <circle ng-show="!upLeg&&started" cx="75%" cy="{{(currentDuration/(maxDuration*1.2))*90+5}}%"  r="6px" fill="red" />
 
-      <rect ng-repeat="a in race.events"  x="{{25-3*(1+$index)}}%" y="{{(1-a.duration/(maxDuration*1.2))*200-10}}px" rx="10" ry="10" width="{{6*(1+$index)}}%" height="20px" />
+      <rect ng-repeat="a in race.events"  x="{{25-5+a.delay/a.duration*5}}%" y="{{(1-a.duration/(maxDuration*1.2))*90-5}}%" rx="10" ry="10" width="{{10*(a.type==4)}}%" height="20px" />
 
-      <rect ng-repeat="a in upDurations" x="{{25-3*(1+$index)}}%" y="{{(1-a/(maxDuration*1.2))*200-10}}px" rx="10" ry="10" width="{{6*(1+$index)}}%" height="20px" />
+      <text text-anchor="middle" ng-repeat="a in race.events" class="svgText" x="{{25+a.delay/a.duration*5}}%" y="{{(1-a.duration/(maxDuration*1.2))*90-5+3.5}}%" font-family="Verdana" font-size="{{20*(a.type==4)}}">
+          {{a.leg}}
+        </text>
 
+      <rect ng-repeat="a in race.events"  x="{{75-5}}%" y="{{(a.duration/(maxDuration*1.2))*90+5}}%" rx="10" ry="10" width="{{10*(a.type==3)}}%" height="20px" />
 
-      <circle ng-repeat="a in upStore" cx="25%" cy="{{(1-a/(maxDuration*1.2))*200}}px"  r="6px" style="opacity:{{$index/nbUpStore}}" />
+      <text text-anchor="middle" ng-repeat="a in race.events" class="svgText" x="75%" y="{{(a.duration/(maxDuration*1.2))*90+5+3.5}}%" font-family="Verdana" font-size="{{20*(a.type==3)}}">
+          {{a.leg}}
+        </text>
 
-
-      <rect ng-repeat="a in downDurations" x="{{75-3*(1+$index)}}%" y="{{(a/(maxDuration*1.2))*200-10}}px" rx="10" ry="10"  width="{{6*(1+$index)}}%" height="20px" />
-      <circle ng-repeat="a in downStore" cx="75%" cy="{{(a/(maxDuration*1.2))*200}}px"  r="6px" style="opacity:{{$index/nbDownStore}}" />
     </svg>
     <div class="infoDisplay">
 

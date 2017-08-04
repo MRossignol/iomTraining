@@ -5,6 +5,7 @@ app.controller("iomController", function($scope, $timeout, $interval, $window) {
   var bufferLoader = null;
 
   $scope.series = [];
+  $scope.series.races = [];
   $scope.race = [];
   $scope.upLegs = [];
   $scope.downLegs = [];
@@ -109,6 +110,7 @@ app.controller("iomController", function($scope, $timeout, $interval, $window) {
     if ($scope.started) {
       console.log('stop')
       $scope.started = false;
+      $scope.series.races.push($scope.race);
     }
     else {
       console.log('start');
@@ -121,6 +123,7 @@ app.controller("iomController", function($scope, $timeout, $interval, $window) {
       $scope.upLeg = true;
       $scope.tack = 0;
       $scope.legType = 'Up';
+      $scope.race = [];
       playSound(2, startDurations[$scope.startSlider.value]);
       $timeout(function(){
         timing = new Date().getTime();
@@ -130,7 +133,7 @@ app.controller("iomController", function($scope, $timeout, $interval, $window) {
 
     function updateCurrentDuration () {
       $scope.currentDuration = new Date().getTime()-$scope.referenceTime;
-      console.log($scope.currentDuration);
+      // console.log($scope.currentDuration);
       if ($scope.started) {
       $timeout(function(){
         updateCurrentDuration()}, 100);
@@ -139,7 +142,8 @@ app.controller("iomController", function($scope, $timeout, $interval, $window) {
 
     addLap = function(leg) {
       var lap = [];
-
+lap.delay = 0;
+lap.leg = $scope.legNumber;
       var newTiming = new Date().getTime();
       var duration = newTiming-timing;
       timing = newTiming;
@@ -160,15 +164,24 @@ app.controller("iomController", function($scope, $timeout, $interval, $window) {
       $scope.race.events.push(lap);
       if (leg) {
           $scope.referenceTime = timing;
-          if ($scope.upLeg) {
-// sum all and add event
-lap.duration = 0;
-lap.delay = 0;
-lap.type = 4;
-$scope.race.events.push(lap);
+          if ($scope.tack&&$scope.upLeg) {
+        
+            var d1=0;
+            var d2 = 0;
+            for (var k= $scope.race.events.length-1;  k>0 ; k--) {
+              if ($scope.race.events[k].type == 1) {d1+=$scope.race.events[k].duration;}
+              else if ($scope.race.events[k].type == 2) {d2+=$scope.race.events[k].duration;}
+              else {break;}
+            }
+      var lep = [];
+      lep.leg = $scope.legNumber;
+ lep.duration = d1+d2;
+ lep.delay = d1-d2;
+ lep.type = 4;
+ $scope.race.events.push(lep);
           }
       }
-      console.log(lap);
+       console.log($scope.race.events);
     }
 
     nextTack = function(side) {

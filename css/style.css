@@ -75,6 +75,11 @@ rect {
   fill: rgba(0,0,0,.9);
 }
 
+.svgText {
+  fill: white;
+  font-weight:bold;
+}
+
 .legDisplay {
   font-size: 60px;
 }
