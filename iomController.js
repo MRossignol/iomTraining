@@ -11,7 +11,7 @@ app.controller("iomController", function($scope, $timeout, $interval, $window) {
 
   $scope.wakeLockEnabled = false;
 
-  $scope.maxDuration = 1;
+  $scope.maxDuration = 10000;
   $scope.legType = 'Up';
   $scope.started = 0;
   $scope.legNumber = 0;
@@ -117,6 +117,7 @@ app.controller("iomController", function($scope, $timeout, $interval, $window) {
       $scope.upDurations = [];
       $scope.downDurations = [];
       $scope.currentDuration = 0;
+      $scope.referenceTime = 0;
       $scope.upLeg = true;
       $scope.tack = 0;
       $scope.legType = 'Up';
@@ -127,7 +128,16 @@ app.controller("iomController", function($scope, $timeout, $interval, $window) {
       }
     }
 
-    addLap = function() {
+    function updateCurrentDuration () {
+      $scope.currentDuration = new Date().getTime()-$scope.referenceTime;
+      console.log($scope.currentDuration);
+      if ($scope.started) {
+      $timeout(function(){
+        updateCurrentDuration()}, 100);
+      }
+    }
+
+    addLap = function(leg) {
       var lap = [];
 
       var newTiming = new Date().getTime();
@@ -140,25 +150,37 @@ app.controller("iomController", function($scope, $timeout, $interval, $window) {
       if (!$scope.tack) {
         lap.duration = duration-10000;
         $scope.race.events = [];
+        $scope.referenceTime = timing;
+        updateCurrentDuration();
       }
       else {
         lap.duration = duration;
       }
       lap.type = $scope.tack;
       $scope.race.events.push(lap);
+      if (leg) {
+          $scope.referenceTime = timing;
+          if ($scope.upLeg) {
+// sum all and add event
+lap.duration = 0;
+lap.delay = 0;
+lap.type = 4;
+$scope.race.events.push(lap);
+          }
+      }
       console.log(lap);
     }
 
     nextTack = function(side) {
       if ($scope.started && $scope.tack>0 && $scope.tack<3 && $scope.tack!=side){
-        addLap();
+        addLap(0);
         $scope.tack = side;
       }
     }
 
     nextLeg = function(side) {
       if ($scope.started){
-        addLap();
+        addLap(1);
         console.log($scope.legNumber);
         if ($scope.legNumber>$scope.legSlider.value) {
           $scope.startFunc();

@@ -60,8 +60,8 @@
       <line x1="25%" y1="5%" x2="25%" y2="95%" style="stroke:black;" />
       <line x1="75%" y1="5%" x2="75%" y2="95%" style="stroke:black;" />
 
-      <circle ng-show="upLeg&&started" cx="25%" cy="{{(1-currentDuration/(maxDuration*1.2))*200}}px"  r="6px" fill="red" />
-      <circle ng-show="!upLeg&&started" cx="75%" cy="{{(currentDuration/(maxDuration*1.2))*200}}px"  r="6px" fill="red" />
+      <circle ng-show="upLeg&&started" cx="25%" cy="{{(1-currentDuration/(maxDuration*1.2))*90-5}}%"  r="6px" fill="red" />
+      <circle ng-show="!upLeg&&started" cx="75%" cy="{{(currentDuration/(maxDuration*1.2))*90+5}}%"  r="6px" fill="red" />
 
       <rect ng-repeat="a in race.events"  x="{{25-3*(1+$index)}}%" y="{{(1-a.duration/(maxDuration*1.2))*200-10}}px" rx="10" ry="10" width="{{6*(1+$index)}}%" height="20px" />
 
