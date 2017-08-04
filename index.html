@@ -28,12 +28,11 @@
   <div class="page" ng-controller="iomController">
 
     <div class = "buttons">
-      <input type="button" ng-class="{bgredstyle: wakeLockEnabled}" ng-click='wake()' value="WakeLock" />
+      <input type="button" ng-class="{redstyle: wakeLockEnabled}" ng-click='wake()' value="WakeLock" />
       <input type="button" ng-click='' value="Weather" />
-      <input type="button" ng-click='' value="Distance" />
       <input type="button" ng-click='' value="Stats" />
       <input type="button" ng-click='' value="Export" />
-      <input type="button" ng-class="{redstyle: showSettings}" ng-click='showSettings = !showSettings' value="Settings" />
+      <input type="button" ng-class="{redstyle: showSettings}" ng-click='showSettings = !showSettings' value="Series" />
     </div>
     <div class="settingsBox" ng-show="showSettings">
       <h2 class='titles'>Legs</h2>
@@ -47,6 +46,11 @@
       data-rz-slider-model="startSlider.value"
       data-rz-slider-options="startSlider.options"
       ></rzslider>
+       <h2 class='titles' ng-click="setDistance()" ng-class="{redstyle: firstPoint}" >Distance</h2>
+        <rzslider
+        data-rz-slider-model="distanceSlider.value"
+        data-rz-slider-options="distanceSlider.options"
+        ></rzslider>
     </div>
 
     <br>
