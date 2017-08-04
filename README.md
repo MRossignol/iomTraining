@@ -1,8 +1,22 @@
 # iomTraining
 
 TODO
+  speech :
+   if click on same tack report of last leg
+   if double click report on last race average leg
+   cross luff bear away signals
+   start time
+
+  handle and display series
+
+  handles storage
+
+  get weather
+
+  display stats
+
   slider with number of clicks
-  
+
   improve detector by considering a larger array of value (2 sec)
   half of the buffer is for statistic computation half is for detection
   peak detection by peak power over mean power and click detection.
