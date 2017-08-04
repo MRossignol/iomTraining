@@ -4,21 +4,18 @@ app.controller("iomController", function($scope, $timeout, $interval, $window) {
   var timing = 0;
   var bufferLoader = null;
 
-  $scope.wakeLockEnabled = false;
-  $scope.wakeValue = "Wake Lock is disabled";
+  $scope.series = [];
+  $scope.race = [];
+  $scope.upLegs = [];
+  $scope.downLegs = [];
 
-  $scope.upDurations = [];
-  $scope.downDurations = [];
-  $scope.upStore = [];
-  $scope.downStore = [];
+  $scope.wakeLockEnabled = false;
+
   $scope.maxDuration = 1;
   $scope.legType = 'Up';
-  $scope.infoText = 'start';
   $scope.started = 0;
-  $scope.legNumber = 1;
-  $scope.nbUpStore = 0;
-  $scope.nbDownStore = 0;
-  $scope.showSettings = true;
+  $scope.legNumber = 0;
+  $scope.showSettings = false;
   $scope.clickRight = 0;
   $scope.clickLeft = 0;
   $scope.tack = 0;
@@ -59,10 +56,7 @@ app.controller("iomController", function($scope, $timeout, $interval, $window) {
     }
   };
 
-
   var startDurations = [117, 63, 0, 127];
-
-
   var noSleep = new NoSleep();
 
   function loadSounds() {
@@ -111,23 +105,15 @@ app.controller("iomController", function($scope, $timeout, $interval, $window) {
     }
   }
 
-  $scope.startFunc = function(store = false) {
+  $scope.startFunc = function() {
     if ($scope.started) {
       console.log('stop')
       $scope.started = false;
-      $scope.infoText = 'start';
-      if (store) {
-        $scope.upStore = $scope.upStore.concat($scope.upDurations);
-        $scope.downStore = $scope.downStore.concat($scope.downDurations);
-        $scope.nbUpStore = $scope.upStore.length;
-        $scope.nbDownStore = $scope.downStore.length;
-      }
     }
     else {
       console.log('start');
-      $scope.infoText = 'stop';
       $scope.started = true;
-      $scope.legNumber = 1;
+      $scope.legNumber = 0;
       $scope.upDurations = [];
       $scope.downDurations = [];
       $scope.currentDuration = 0;
@@ -137,50 +123,70 @@ app.controller("iomController", function($scope, $timeout, $interval, $window) {
       playSound(2, startDurations[$scope.startSlider.value]);
       $timeout(function(){
         timing = new Date().getTime();
-        console.log('started');}, (startDurations[3]-startDurations[$scope.startSlider.value])*1000);
+        console.log('start in 10 secs');}, (startDurations[3]-startDurations[$scope.startSlider.value]-10)*1000);
       }
     }
 
+    addLap = function() {
+      var lap = [];
+
+      var newTiming = new Date().getTime();
+      var duration = newTiming-timing;
+      timing = newTiming;
+
+      if (duration>$scope.maxDuration) {
+        $scope.maxDuration = duration;
+      }
+      if (!$scope.tack) {
+        lap.duration = duration-10000;
+        $scope.race.events = [];
+      }
+      else {
+        lap.duration = duration;
+      }
+      lap.type = $scope.tack;
+      $scope.race.events.push(lap);
+      console.log(lap);
+    }
+
     nextTack = function(side) {
-      if ($scope.started){
-        var newTiming = new Date().getTime();
+      if ($scope.started && $scope.tack>0 && $scope.tack<3 && $scope.tack!=side){
+        addLap();
         $scope.tack = side;
-        if (!$scope.tack) {
-          // pre start
-
-        }
-        else {
-
-        }
       }
     }
 
     nextLeg = function(side) {
       if ($scope.started){
-        var newTiming = new Date().getTime();
-        var duration = newTiming-timing;
-        timing = newTiming;
-
-        if ($scope.upLeg) {
-          $scope.tack = 3;
-          $scope.upLeg = false;
-          $scope.upDurations.push(duration);
-        }
-        else {
-          console.log(side);
-          $scope.tack = side;
-          $scope.upLeg = true;
-          $scope.legNumber++;
-          $scope.downDurations.push(duration);
-        }
-        if (duration>$scope.maxDuration) {
-          $scope.maxDuration = duration;
-        }
+        addLap();
+        console.log($scope.legNumber);
         if ($scope.legNumber>$scope.legSlider.value) {
-          $scope.startFunc(1);
+          $scope.startFunc();
           $scope.legNumber--;
         }
+        if (!$scope.legNumber) {
+          $scope.legNumber++;
+          $scope.tack = side;
+        }
+        else {
+          if ($scope.upLeg) {
+            $scope.tack = 3;
+            $scope.upLeg = false;
+
+            if ($scope.legSlider.value%1 > 0 && $scope.legNumber>$scope.legSlider.value-.5) {
+              $scope.legNumber++;
+            }
+
+          }
+          else {
+            console.log(side);
+            $scope.tack = side;
+            $scope.upLeg = true;
+            $scope.legNumber++;
+          }
+        }
       }
+      console.log($scope.race);
     }
 
     loadSounds();
@@ -214,7 +220,6 @@ app.controller("iomController", function($scope, $timeout, $interval, $window) {
           }
         }
       }
-
       $scope.clickLeft = 0;
       $scope.clickRight = 0;
     }
@@ -316,24 +321,24 @@ app.controller("iomController", function($scope, $timeout, $interval, $window) {
 
     $scope.setDistance = function () {
       if ("geolocation" in navigator) {
-              console.log($scope.firstPoint);
+        console.log($scope.firstPoint);
         // get position / prompt for access
         navigator.geolocation.getCurrentPosition(function(position) {
           $scope.$apply(function(){
-          if (!$scope.firstPoint) {
-            $scope.firstPointLocation = position.coords;
-            $scope.firstPoint = 1;
+            if (!$scope.firstPoint) {
+              $scope.firstPointLocation = position.coords;
+              $scope.firstPoint = 1;
               console.log($scope.firstPoint);
-            console.log(position.coords);
-          }
-          else {
-            var distance = 0;
-            $scope.firstPoint = 0;
-            distance = getDistance($scope.firstPointLocation.latitude, $scope.firstPointLocation.longitude, position.coords.latitude, position.coords.longitude)*1000;
-            $scope.distanceSlider.value = distance;
-            console.log(distance);
-          }})
-        }, function(position) {'Unable to get location'});
+              console.log(position.coords);
+            }
+            else {
+              var distance = 0;
+              $scope.firstPoint = 0;
+              distance = getDistance($scope.firstPointLocation.latitude, $scope.firstPointLocation.longitude, position.coords.latitude, position.coords.longitude)*1000;
+              $scope.distanceSlider.value = distance;
+              console.log(distance);
+            }})
+          }, function(position) {'Unable to get location'});
+        }
       }
-    }
-  });
+    });
