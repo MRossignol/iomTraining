@@ -52,7 +52,7 @@
     <br>
 
 
-    <svg id="raceDisplay" class="raceDisplay" ng-click="doClick($event)" >
+    <svg id="raceDisplay" class="raceDisplay"  >
       <line x1="25%" y1="5%" x2="25%" y2="95%" style="stroke:black;" />
       <circle ng-show="upLeg&&started" cx="25%" cy="{{(1-currentDuration/(maxDuration*1.2))*200}}px"  r="6px" fill="red" />
       <rect ng-repeat="a in upDurations" x="{{25-3*(1+$index)}}%" y="{{(1-a/(maxDuration*1.2))*200-10}}px" rx="10" ry="10" width="{{6*(1+$index)}}%" height="20px" />
@@ -64,12 +64,27 @@
       <rect ng-repeat="a in downDurations" x="{{75-3*(1+$index)}}%" y="{{(a/(maxDuration*1.2))*200-10}}px" rx="10" ry="10"  width="{{6*(1+$index)}}%" height="20px" />
       <circle ng-repeat="a in downStore" cx="75%" cy="{{(a/(maxDuration*1.2))*200}}px"  r="6px" style="opacity:{{$index/nbDownStore}}" />
     </svg>
-    <div class="infoDisplay" ng-class="{redstyle: clickDetected}">
+    <div class="infoDisplay">
 
-      <button ng-click="startFunc()" ng-class="{redstyle: started}">{{infoText}} </button>
-      <div ng-show="started">
-        {{legType}}wind leg number {{legNumber}}
-      </div>
+
+
+      <button class="wi wi-wind towards-0-deg" ng-click="startFunc()" ng-class="{redstyle: started&&tack==0}"> </button>
+  <div ng-show="started">
+      <br>  <br>
+      <div class="legDisplay">
+  {{legNumber}}
+  </div>
+  <br>
+        <i class="wi wi-wind towards-315-deg" ng-class="{redstyle: started&&tack==2}"></i>
+        <i class="wi wi-wind towards-45-deg" ng-class="{redstyle: started&&tack==1}"></i>
+        <br>
+        <i class="wi wi-wind towards-180-deg" ng-class="{redstyle: started&&tack==3}"></i>
+        <br><br>
+  </div>
+
+
+
+
     </div>
   </div>
 

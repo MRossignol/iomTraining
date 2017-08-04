@@ -65,7 +65,7 @@ z-index:0;
 }
 
 .infoDisplay {
-  padding-top: 25%;
+  padding-top: 15%;
   position: relative;
   text-align: center;
   z-index:1;
@@ -75,11 +75,17 @@ rect {
   fill: rgba(0,0,0,.9);
 }
 
+.legDisplay {
+  font-size: 60px;
+}
+
 .titles {text-align: center;}
 
 .buttons {
   text-align: center;
 }
+
+.wi {font-size: 40px;}
 
 .settingsBox {
   margin:5px;

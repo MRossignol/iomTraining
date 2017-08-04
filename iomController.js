@@ -21,6 +21,7 @@ app.controller("iomController", function($scope, $timeout, $interval, $window) {
   $scope.showSettings = false;
   $scope.clickRight = 0;
   $scope.clickLeft = 0;
+  $scope.tack = 0;
 
   $scope.legSlider = {
     value: 2,
@@ -34,17 +35,17 @@ app.controller("iomController", function($scope, $timeout, $interval, $window) {
   };
 
   $scope.startSlider = {
-    value: 5,
+    value: 0,
     options: {
       floor: 0,
-      ceil: 5,
+      ceil: 2,
       step: 1,
       showTicks: true,
       showSelectionBar: true
     }
   };
 
-
+var startDurations = [117, 63, 0, 127];
 
 
   var noSleep = new NoSleep();
@@ -70,22 +71,25 @@ app.controller("iomController", function($scope, $timeout, $interval, $window) {
     console.log('Done with loading audio files.');
   }
 
-  function playSound(id) {
+  function playSound(id, start) {
     var source = audioContext.createBufferSource(); // creates a sound source
     // console.log(buffer);
     source.buffer = bufferLoader.bufferList[id];                    // tell the source which sound to play
     source.connect(audioContext.destination);       // connect the source to the context's destination (the speakers)
-    source.start(0);
+    source.start(0, start);
   }
 
 
   $scope.wake = function() {
     console.log($scope.wakeLockEnabled)
+
     if (!$scope.wakeLockEnabled) {
       noSleep.enable(); // keep the screen on!
       $scope.wakeLockEnabled = true;
       $scope.wakeValue = "Wake Lock is enabled";
+        requestFullScreen(document.body);
     } else {
+      outFullScreen();
       noSleep.disable(); // let the screen turn off.
       $scope.wakeLockEnabled = false;
       $scope.wakeValue = "Wake Lock is disabled";
@@ -113,26 +117,45 @@ app.controller("iomController", function($scope, $timeout, $interval, $window) {
       $scope.downDurations = [];
       $scope.currentDuration = 0;
       $scope.upLeg = true;
+      $scope.tack = 0;
       $scope.legType = 'Up';
-      timing = new Date().getTime();
+      playSound(2, startDurations[$scope.startSlider.value]);
+      $timeout(function(){
+        timing = new Date().getTime();
+        console.log('started');}, (startDurations[3]-startDurations[$scope.startSlider.value])*1000);
     }
   }
 
-  nextLeg = function() {
+  nextTack = function(side) {
+    if ($scope.started){
+    var newTiming = new Date().getTime();
+      $scope.tack = side;
+if (!$scope.tack) {
+  // pre start
+
+}
+else {
+
+}
+  }
+  }
+
+  nextLeg = function(side) {
     if ($scope.started){
       var newTiming = new Date().getTime();
       var duration = newTiming-timing;
       timing = newTiming;
 
       if ($scope.upLeg) {
+        $scope.tack = 3;
         $scope.upLeg = false;
-        $scope.legType = 'Down';
         $scope.upDurations.push(duration);
       }
       else {
+        console.log(side);
+          $scope.tack = side;
         $scope.upLeg = true;
         $scope.legNumber++;
-        $scope.legType = 'Up';
         $scope.downDurations.push(duration);
       }
       if (duration>$scope.maxDuration) {
@@ -140,6 +163,7 @@ app.controller("iomController", function($scope, $timeout, $interval, $window) {
       }
       if ($scope.legNumber>$scope.legSlider.value) {
         $scope.startFunc(1);
+          $scope.legNumber--;
       }
     }
   }
@@ -147,17 +171,19 @@ app.controller("iomController", function($scope, $timeout, $interval, $window) {
   loadSounds();
 
   function handleClick () {
-
     if ($scope.clickLeft) {
       if ($scope.clickRight) {
         console.log('double alternate');
+        $scope.startFunc();
       }
       else {
         if ($scope.clickLeft>1) {
           console.log('double left');
+          nextLeg(1);
         }
         else {
           console.log('left');
+          nextTack(1);
         }
       }
     }
@@ -165,9 +191,11 @@ app.controller("iomController", function($scope, $timeout, $interval, $window) {
         if ($scope.clickRight) {
           if ($scope.clickRight>1) {
             console.log('double right');
+            nextLeg(2);
           }
           else {
             console.log('right');
+            nextTack(2);
           }
         }
       }
@@ -176,11 +204,11 @@ app.controller("iomController", function($scope, $timeout, $interval, $window) {
     $scope.clickRight = 0;
   }
 
-  function gotClick(left) {
+  function gotClick(side) {
     if (!$scope.clickLeft && !$scope.clickRight) {
       $timeout(function(){handleClick()}, 500);
     }
-    if (left)
+    if (side)
     $scope.clickLeft+=1;
     else {
       $scope.clickRight+=1;
@@ -189,13 +217,13 @@ app.controller("iomController", function($scope, $timeout, $interval, $window) {
   // $timeout(function(){playSound(okBuffer)}, 500);
 
   $scope.doClick = function(event){
-    if (event.offsetX<document.getElementById('raceDisplay').clientWidth/2) {
+    if (event.offsetX<document.getElementById('raceDisplay').clientWidth/4) {
       gotClick(true);
     }
-    else {
+    else if (event.offsetX>3*document.getElementById('raceDisplay').clientWidth/4) {
       gotClick(false);
     }
-    // console.log(event);
+     console.log(event);
   };
 
   document.onkeydown = function(e) {
@@ -225,4 +253,29 @@ app.controller("iomController", function($scope, $timeout, $interval, $window) {
     }
     console.log(e.keyCode)
   };
+
+  function requestFullScreen(element) {
+    // Supports most browsers and their versions.
+    var requestMethod = element.requestFullScreen || element.webkitRequestFullScreen || element.mozRequestFullScreen || element.msRequestFullScreen;
+
+    if (requestMethod) { // Native full screen.
+        requestMethod.call(element);
+    } else if (typeof window.ActiveXObject !== "undefined") { // Older IE.
+        var wscript = new ActiveXObject("WScript.Shell");
+        if (wscript !== null) {
+            wscript.SendKeys("{F11}");
+        }
+    }
+}
+function outFullScreen() {
+  if (document.exitFullscreen) {
+      document.exitFullscreen();
+  }
+  else if (document.mozCancelFullScreen) {
+      document.mozCancelFullScreen();
+  }
+  else if (document.webkitCancelFullScreen) {
+      document.webkitCancelFullScreen();
+  }
+}
 });
