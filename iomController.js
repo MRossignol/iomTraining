@@ -1,4 +1,4 @@
-app.controller("iomController", function($scope, $timeout, $interval, $window) {
+app.controller("iomController", ['$scope', '$timeout', '$interval', '$window', '$q', 'darkSky', function($scope, $timeout, $interval, $window, $q, darkSky) {
   var audioContext = null;
   var meter = null;
   var timing = 0;
@@ -11,7 +11,7 @@ app.controller("iomController", function($scope, $timeout, $interval, $window) {
   $scope.downLegs = [];
 
   $scope.wakeLockEnabled = false;
-
+$scope.weatherDisplayed = false;
   $scope.maxDuration = 10000;
   $scope.legType = 'Up';
   $scope.started = 0;
@@ -56,6 +56,59 @@ app.controller("iomController", function($scope, $timeout, $interval, $window) {
       showSelectionBar: true
     }
   };
+
+  //
+  activate();
+  // log current weather data
+  function activate() {
+    getNavigatorCoords()
+    .then(function(position) {
+      $scope.position = position;
+      darkSky.getCurrent(position.latitude, position.longitude)
+      .then(function(res){$scope.weather=res; console.log($scope.weather);})
+      .catch(console.warn);
+    })
+    .catch(console.warn);
+  }
+  // Get current location coordinates if supported by browser
+  function getNavigatorCoords() {
+    var deferred = $q.defer();
+
+    // check for browser support
+    if ("geolocation" in navigator) {
+      // get position / prompt for access
+      navigator.geolocation.getCurrentPosition(function(position) {
+        deferred.resolve(position.coords);
+      });
+    } else {
+      deferred.reject('geolocation not supported');
+    }
+    return deferred.promise;
+  }
+
+$scope.showWeather = function(){
+  if (!$scope.weatherDisplayed){
+
+ darkSky.getHourlyForecast($scope.position.latitude, $scope.position.longitude).then(displayWeather);
+
+  }
+  else {
+    $scope.weatherDisplayed=false;
+  }
+  }
+
+  var displayWeather = function(hourly) {
+      $scope.weatherDisplayed=true;
+      // store speed and gust and directions and display them for 12 hours
+      for () {
+
+      }
+      $scope.weather.hourly
+      console.log(hourly);
+
+  }
+
+  //
 
   var startDurations = [117, 63, 0, 127];
   var noSleep = new NoSleep();
@@ -165,7 +218,7 @@ lap.leg = $scope.legNumber;
       if (leg) {
           $scope.referenceTime = timing;
           if ($scope.tack&&$scope.upLeg) {
-        
+
             var d1=0;
             var d2 = 0;
             for (var k= $scope.race.events.length-1;  k>0 ; k--) {
@@ -376,4 +429,4 @@ lap.leg = $scope.legNumber;
           }, function(position) {'Unable to get location'});
         }
       }
-    });
+    }]);

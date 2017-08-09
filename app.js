@@ -6,6 +6,10 @@ app.config(['$compileProvider',
 		     $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|blob|file):/);
 		 }]);
 
+		 app.config(function($sceProvider) {
+  $sceProvider.enabled(false);
+});
+
 app.config(['darkSkyProvider', function(darkSkyProvider) {
 		  	darkSkyProvider.setApiKey('df2d7141740701587a1cde5b5d340379');
 		 	}]);

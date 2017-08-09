@@ -10,12 +10,11 @@
   <script src="lib/ui-bootstrap-tpls.js"></script>
   <script src="lib/rzslider.js"></script>
   <script src="lib/BufferLoad.js"></script>
-  <script src="lib/angular-dark-sky.min.js"></script>
+  <script src="lib/angular-dark-sky.js"></script>
 
   <script src="lib/utils.js"></script>
   <script src="lib/NoSleep.min.js"></script>
   <script src="app.js"></script>
-  <script src="lib/weatherController.js"></script>
   <script src="iomController.js"></script>
 
   <link rel="stylesheet" type="text/css" href="css/style.css"/>
@@ -24,15 +23,18 @@
   <link href='https://fonts.googleapis.com/css?family=Cousine:700' rel='stylesheet' type='text/css'>
 </head>
 
-<body id="body" ng-controller="weatherController">
+<body id="body">
   <div class="page" ng-controller="iomController">
 
+
     <div class = "buttons">
+
       <input type="button" ng-class="{redstyle: wakeLockEnabled}" ng-click='wake()' value="WakeLock" />
-      <input type="button" ng-click='' value="Weather" />
       <input type="button" ng-click='' value="Stats" />
       <input type="button" ng-click='' value="Export" />
       <input type="button" ng-class="{redstyle: showSettings}" ng-click='showSettings = !showSettings' value="Series" />
+      <dark-sky-icon icon="{{ weather.currently.icon }}" ng-class="{redstyle: weatherDisplayed}" ng-click='showWeather()'></dark-sky-icon>
+
     </div>
     <div class="settingsBox" ng-show="showSettings">
       <h2 class='titles'>Legs</h2>
@@ -52,6 +54,8 @@
         data-rz-slider-options="distanceSlider.options"
         ></rzslider>
     </div>
+
+
 
     <br>
 
