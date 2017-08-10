@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="utf-8" />
-  <title>Acoustic Level</title>
+  <title>RC</title>
   <script src="lib/angular.min.js"></script>
   <link rel="stylesheet" href="lib/bootstrap.min.css">
   <link rel="stylesheet" href="lib/rzslider.css"/>
@@ -79,8 +79,8 @@
     <div class="settingsBox" ng-show="showSettings">
       <h2 class='titles'>Legs</h2>
       <span ng-click='raceType=!raceType' class="btn btn-default  btn-lg">
-        <div ng-show="raceType" class="glyphicon glyphicon-repeat"> </div>
-        <div ng-show="!raceType" class="glyphicon glyphicon-refresh"> </div>
+        <div ng-show="!raceType" class="glyphicon glyphicon-repeat"> </div>
+        <div ng-show="raceType" class="glyphicon glyphicon-refresh"> </div>
     </span>
       <rzslider
       data-rz-slider-model="legSlider.value"
@@ -109,28 +109,31 @@
 
     <svg id="raceDisplay" class="raceDisplay"  >
       <line x1="25%" y1="5%" x2="25%" y2="95%" style="stroke:black;" />
-      <line x1="75%" y1="5%" x2="75%" y2="95%" style="stroke:black;" />
+      <circle ng-show="upLeg&&started" cx="25%" ng-attr-cy="{{(1-currentDuration/(maxDuration*1.2))*90-5}}%"  r="6px" fill="red" />
+      <rect ng-repeat="a in race.events"  ng-attr-x="{{25-5+a.delay/a.duration*5}}%" ng-attr-y="{{(1-a.duration/(maxDuration*1.2))*90-5}}%" rx="10" ry="10" ng-attr-width="{{10*(a.type==4)}}%" height="20px" />
+      <text text-anchor="middle" ng-repeat="a in race.events" class="svgText" ng-attr-x="{{25+a.delay/a.duration*5}}%" ng-attr-y="{{(1-a.duration/(maxDuration*1.2))*90-5+3.5}}%" font-family="Verdana" ng-attr-font-size="{{20*(a.type==4)}}">
+          {{a.leg}}
+        </text>
+
+      <line ng-show="raceType" x1="75%" y1="5%" x2="75%" y2="95%" style="stroke:black;" />
+      <circle ng-show="raceType&&!upLeg&&started" cx="75%" ng-attr-cy="{{(currentDuration/(maxDuration*1.2))*90+5}}%"  r="6px" fill="red" />
+      <rect ng-show="raceType" ng-repeat="a in race.events"  x="70%" ng-attr-y="{{(a.duration/(maxDuration*1.2))*90+5}}%" rx="10" ry="10" ng-attr-width="{{10*(a.type==3)}}%" height="20px" />
+      <text ng-show="raceType" text-anchor="middle" ng-repeat="a in race.events" class="svgText" x="75%" ng-attr-y="{{(a.duration/(maxDuration*1.2))*90+5+3.5}}%" font-family="Verdana" ng-attr-font-size="{{20*(a.type==3)}}">
+          {{a.leg}}
+      </text>
 
       <line x1="40%" y1="90%" x2="60%" y2="90%" style="stroke:black;" />
       <line x1="50%" y1="87%" x2="50%" y2="93%" style="stroke:black;" />
 
-      <rect ng-repeat="a in race.events" " x="{{50+a.duration/1000}}%" y="85%" rx="10" ry="10" width="2%" height="{{10*(a.type==0)}}%" />
+      <rect ng-repeat="a in race.events" " ng-attr-x="{{50+a.duration/1000}}%" y="85%" rx="10" ry="10" width="2%" ng-attr-height="{{10*(a.type==0)}}%" />
 
 
-      <circle ng-show="upLeg&&started" cx="25%" cy="{{(1-currentDuration/(maxDuration*1.2))*90-5}}%"  r="6px" fill="red" />
-      <circle ng-show="!upLeg&&started" cx="75%" cy="{{(currentDuration/(maxDuration*1.2))*90+5}}%"  r="6px" fill="red" />
 
-      <rect ng-repeat="a in race.events"  x="{{25-5+a.delay/a.duration*5}}%" y="{{(1-a.duration/(maxDuration*1.2))*90-5}}%" rx="10" ry="10" width="{{10*(a.type==4)}}%" height="20px" />
 
-      <text text-anchor="middle" ng-repeat="a in race.events" class="svgText" x="{{25+a.delay/a.duration*5}}%" y="{{(1-a.duration/(maxDuration*1.2))*90-5+3.5}}%" font-family="Verdana" font-size="{{20*(a.type==4)}}">
-          {{a.leg}}
-        </text>
 
-      <rect ng-repeat="a in race.events"  x="{{75-5}}%" y="{{(a.duration/(maxDuration*1.2))*90+5}}%" rx="10" ry="10" width="{{10*(a.type==3)}}%" height="20px" />
 
-      <text text-anchor="middle" ng-repeat="a in race.events" class="svgText" x="75%" y="{{(a.duration/(maxDuration*1.2))*90+5+3.5}}%" font-family="Verdana" font-size="{{20*(a.type==3)}}">
-          {{a.leg}}
-        </text>
+
+
 
     </svg>
     <div class="infoDisplay">
