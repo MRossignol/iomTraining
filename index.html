@@ -10,7 +10,7 @@
   <script src="lib/ui-bootstrap-tpls.js"></script>
   <script src="lib/rzslider.js"></script>
   <script src="lib/BufferLoad.js"></script>
-  <script src="lib/angular-dark-sky.js"></script>
+  <script src="lib/angular-dark-sky.min.js"></script>
 
   <script src="lib/utils.js"></script>
   <script src="lib/NoSleep.min.js"></script>
@@ -78,6 +78,10 @@
 
     <div class="settingsBox" ng-show="showSettings">
       <h2 class='titles'>Legs</h2>
+      <span ng-click='raceType=!raceType' class="btn btn-default  btn-lg">
+        <div ng-show="raceType" class="glyphicon glyphicon-repeat"> </div>
+        <div ng-show="!raceType" class="glyphicon glyphicon-refresh"> </div>
+    </span>
       <rzslider
       data-rz-slider-model="legSlider.value"
       data-rz-slider-options="legSlider.options"
@@ -89,14 +93,13 @@
       data-rz-slider-options="startSlider.options"
       ></rzslider>
        <h2 class='titles'  >Distance</h2>
-       <centering>
        <span ng-click='setDistance()' class="btn btn-default  btn-lg">
            <div ng-class="{redstyle: firstPoint}" class="glyphicon glyphicon-map-marker"></div>
        </span>
-        <span>  <rzslider
+        <rzslider
         data-rz-slider-model="distanceSlider.value"
         data-rz-slider-options="distanceSlider.options"
-        ></rzslider></span>
+        ></rzslider>
     </div>
 
 

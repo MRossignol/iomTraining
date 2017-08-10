@@ -12,6 +12,7 @@ app.controller("iomController", ['$scope', '$timeout', '$interval', '$window', '
   $scope.race = [];
   $scope.upLegs = [];
   $scope.downLegs = [];
+  $scope.raceType = true;
 
   $scope.wakeLockEnabled = false;
 $scope.weatherDisplayed = false;
