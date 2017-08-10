@@ -36,6 +36,20 @@
       <dark-sky-icon icon="{{ weather.currently.icon }}" ng-class="{redstyle: weatherDisplayed}" ng-click='showWeather()'></dark-sky-icon>
 
     </div>
+      <div  ng-show="weatherDisplayed">
+        <table class="weatherBox">
+          <tr>
+              <td ng-repeat="x in weather.data"><span  class="wi wi-wind {{x.windBearing}}" ></span></td>
+          </tr>
+        <tr>
+            <td ng-repeat="x in weather.data">{{x.windSpeed}} ({{x.windGust}})</td>
+        </tr>
+        <tr>
+            <td ng-repeat="x in weather.data"><dark-sky-icon icon="{{ x.icon }}"></dark-sky-icon></td>
+        </tr>
+      </table>
+
+      </div>
     <div class="settingsBox" ng-show="showSettings">
       <h2 class='titles'>Legs</h2>
       <rzslider

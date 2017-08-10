@@ -97,15 +97,20 @@ $scope.showWeather = function(){
   }
   }
 
-  var displayWeather = function(hourly) {
+  var displayWeather = function(data) {
       $scope.weatherDisplayed=true;
-      // store speed and gust and directions and display them for 12 hours
-      for () {
-
+      $scope.weather.data = [];
+      // store speed and gust and directions and display them for 8 hours
+      console.log(data);
+      for (var k=0;k<8;k++) {
+        var dk = [];
+        dk.windSpeed = Math.round(data.hourly.data[k].windSpeed) ;
+        dk.windGust = Math.round(data.hourly.data[k].windGust);
+        dk.windBearing = 'from-'+data.hourly.data[k].windBearing+'-deg';
+        dk.icon = data.hourly.data[k].icon;
+        $scope.weather.data.push(dk);
       }
-      $scope.weather.hourly
-      console.log(hourly);
-
+      console.log($scope.weather.data);
   }
 
   //

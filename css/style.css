@@ -79,6 +79,15 @@ rect {
   fill: white;
   font-weight:bold;
 }
+.weatherBox{
+    padding : 10px;
+  margin: 0px auto;
+    font-weight:bold;
+}
+
+td {
+  padding : 10px;
+}
 
 .legDisplay {
   font-size: 60px;
