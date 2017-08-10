@@ -300,7 +300,7 @@ app.controller("iomController", ['$scope', '$timeout', '$interval', '$window', '
           }
         }
 
-        nextLeg = function(side) {
+        $scope.nextLeg = function(side) {
           if ($scope.started){
             addLap(1);
             console.log('leg '+$scope.legNumber+' '+$scope.legSlider.value);
@@ -348,7 +348,7 @@ app.controller("iomController", ['$scope', '$timeout', '$interval', '$window', '
             else {
               if ($scope.clickLeft>1) {
                 console.log('double left');
-                nextLeg(1);
+                $scope.nextLeg(1);
               }
               else {
                 console.log('left');
@@ -360,7 +360,7 @@ app.controller("iomController", ['$scope', '$timeout', '$interval', '$window', '
             if ($scope.clickRight) {
               if ($scope.clickRight>1) {
                 console.log('double right');
-                nextLeg(2);
+                $scope.nextLeg(2);
               }
               else {
                 console.log('right');
@@ -407,7 +407,7 @@ app.controller("iomController", ['$scope', '$timeout', '$interval', '$window', '
             $scope.sensitivity = Math.max($scope.sensitivity, 1);
             break;
             case 76: // l
-            nextLeg();
+            $scope.nextLeg(1);
             break;
             case 83: // s
             $scope.startFunc();

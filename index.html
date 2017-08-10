@@ -147,8 +147,8 @@
   {{legNumber}}
   </div>
   <br>
-        <i class="wi wi-wind towards-315-deg" ng-class="{redstyle: started&&tack==2}"></i>
-        <i class="wi wi-wind towards-45-deg" ng-class="{redstyle: started&&tack==1}"></i>
+        <i ng-click="nextLeg(2)" class="wi wi-wind towards-315-deg" ng-class="{redstyle: started&&tack==2}"></i>
+        <i ng-click="nextLeg(1)" class="wi wi-wind towards-45-deg" ng-class="{redstyle: started&&tack==1}"></i>
         <br>
         <i class="wi wi-wind towards-180-deg" ng-class="{redstyle: started&&tack==3}"></i>
         <br><br>
