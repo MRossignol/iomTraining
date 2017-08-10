@@ -17,10 +17,12 @@
   <script src="app.js"></script>
   <script src="iomController.js"></script>
 
-  <link rel="stylesheet" type="text/css" href="css/style.css"/>
   <link rel="stylesheet" type="text/css" href="css/weather-icons.min.css"/>
   <link rel="stylesheet" type="text/css" href="css/weather-icons-wind.min.css"/>
   <link href='https://fonts.googleapis.com/css?family=Cousine:700' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+      <link rel="stylesheet" type="text/css" href="css/style.css"/>
+
 </head>
 
 <body id="body">
@@ -28,13 +30,18 @@
 
 
     <div class = "buttons">
-
-      <input type="button" ng-class="{redstyle: wakeLockEnabled}" ng-click='wake()' value="WakeLock" />
-      <input type="button" ng-click='' value="Stats" />
-      <input type="button" ng-click='' value="Export" />
-      <input type="button" ng-class="{redstyle: showSettings}" ng-click='showSettings = !showSettings' value="Series" />
-      <dark-sky-icon icon="{{ weather.currently.icon }}" ng-class="{redstyle: weatherDisplayed}" ng-click='showWeather()'></dark-sky-icon>
-
+      <button ng-click='wake()' class="btn btn-default   btn-lg">
+         <span ng-class="{redstyle: wakeLockEnabled}" class="glyphicon glyphicon-sound-stereo"></span>
+      </button>
+      <button ng-click='showWeather()' class="btn btn-default  btn-lg">
+         <dark-sky-icon ng-class="{redstyle: weatherDisplayed}"  icon="{{ weather.currently.icon }}"></dark-sky-icon>
+      </button>
+      <button class="btn btn-default   btn-lg" ng-click='showStats = !showStats'>
+         <span   ng-class="{redstyle: showStats}" class="glyphicon glyphicon-stats"></span>
+      </button>
+      <button ng-click='showSettings = !showSettings' class="btn btn-default  btn-lg">
+          <span ng-class="{redstyle: showSettings}" class="glyphicon glyphicon-cog"></span>
+      </button>
     </div>
       <div  ng-show="weatherDisplayed">
         <table class="weatherBox">
@@ -50,6 +57,25 @@
       </table>
 
       </div>
+
+      <div  ng-show="showStats">
+        <table class="statBox">
+          <tr>
+            <td>preStart</td><td> <td> {{
+              series.preStart}}</td> <td><i class="wi wi-wind towards-90-deg"></i> </td>   <td ng-repeat="x in series.races | orderBy:'':true |limitTo:6"> <span ng-class='{redstyle:$first}'>{{x.preStart}}<span></td>
+          </tr>
+          <tr>
+            <td>upWind</td><td> <td> {{
+              series.preStart}}</td> <td><i class="wi wi-wind towards-0-deg"></i> </td>   <td ng-repeat="x in series.races | orderBy:'':true |limitTo:6"> <span ng-class='{redstyle:$first}'>{{x.upWind}}<span></td>
+          </tr>
+          <tr>
+            <td>downWind</td><td> <td> {{
+              series.preStart}}</td> <td><i class="wi wi-wind towards-180-deg"></i> </td>   <td ng-repeat="x in series.races | orderBy:'':true |limitTo:6"> <span ng-class='{redstyle:$first}'>{{x.downWind}}<span></td>
+          </tr>
+      </table>
+
+      </div>
+
     <div class="settingsBox" ng-show="showSettings">
       <h2 class='titles'>Legs</h2>
       <rzslider
@@ -62,11 +88,15 @@
       data-rz-slider-model="startSlider.value"
       data-rz-slider-options="startSlider.options"
       ></rzslider>
-       <h2 class='titles' ng-click="setDistance()" ng-class="{redstyle: firstPoint}" >Distance</h2>
-        <rzslider
+       <h2 class='titles'  >Distance</h2>
+       <centering>
+       <span ng-click='setDistance()' class="btn btn-default  btn-lg">
+           <div ng-class="{redstyle: firstPoint}" class="glyphicon glyphicon-map-marker"></div>
+       </span>
+        <span>  <rzslider
         data-rz-slider-model="distanceSlider.value"
         data-rz-slider-options="distanceSlider.options"
-        ></rzslider>
+        ></rzslider></span>
     </div>
 
 

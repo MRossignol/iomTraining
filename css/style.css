@@ -17,34 +17,8 @@
     left: 0px;
 }
 
-#number {
-    font-family: 'Cousine';
-    text-align: right;
-    width: 120px;
-    font-size: 100px;
-    color: white;
-    z-index: 10;
-    top: 0px;
-    left: 0px;
-    position: relative;
-    top: 50%;
-    transform: translateY(-50%);
-    left: 50%;
-    transform: translateX(-50%);
-}
 
-#sensitivity {
-    font-family: 'Cousine';
-    text-align: center;
-    margin: auto;
-    margin-top: 20px;
-    width: 600px;
-    font-size: 30px;
-    color: white;
-    z-index: 10;
-    position: relative;
-    transition: opacity 2s;
-}
+
 
 #base {
     width: 100%;
@@ -56,7 +30,6 @@
 
 
 .raceDisplay {
-  border-style : groove;
     border: :20px;
   width: 98%;
   height: 90%;
@@ -85,6 +58,16 @@ rect {
     font-weight:bold;
 }
 
+.statBox{
+    padding : 100px;
+  margin: 0px auto;
+    font-weight:bold;
+}
+
+.glyphicon{
+  font-size: 36px;
+}
+
 td {
   padding : 10px;
 }
@@ -102,10 +85,11 @@ td {
 .wi {font-size: 40px;}
 
 .settingsBox {
+  text-align: center;
   margin:5px;
   padding: 5px;
-  border-style : groove;
 }
 
+.style {color: black;}
 .redstyle {color: red;}
 .bgredstyle {background-color: red;}

@@ -5,6 +5,9 @@ app.controller("iomController", ['$scope', '$timeout', '$interval', '$window', '
   var bufferLoader = null;
 
   $scope.series = [];
+  $scope.series.preStart = 0;
+  $scope.series.upWind = 0;
+  $scope.series.downWind = 0;
   $scope.series.races = [];
   $scope.race = [];
   $scope.upLegs = [];
@@ -16,7 +19,8 @@ $scope.weatherDisplayed = false;
   $scope.legType = 'Up';
   $scope.started = 0;
   $scope.legNumber = 0;
-  $scope.showSettings = false;
+  $scope.showSettings = true;
+  $scope.showStats = false;
   $scope.clickRight = 0;
   $scope.clickLeft = 0;
   $scope.tack = 0;
@@ -164,11 +168,57 @@ $scope.showWeather = function(){
     }
   }
 
-  $scope.startFunc = function() {
+  function setSeries(){
+    $scope.series.preStart = 0;
+    $scope.series.upWind = 0;
+    $scope.series.downWind = 0;
+    for (var k=0;k<$scope.series.races.length;k++){
+      $scope.series.preStart += $scope.series.races[k].preStart;
+      $scope.series.upWind += $scope.series.races[k].upWind;
+      $scope.series.downWind += $scope.series.races[k].downWind;
+    }
+    $scope.series.preStart /= $scope.series.races.length;
+    $scope.series.upWind /= $scope.series.races.length;
+    $scope.series.downWind /= $scope.series.races.length;
+    $scope.series.preStart = Math.round($scope.series.preStart);
+    $scope.series.upWind = Math.round($scope.series.upWind);
+    $scope.series.downWind = Math.round($scope.series.downWind);
+  }
+
+  function addRace() {
+    var race = $scope.race;
+    console.log(race);
+    race.preStart = 0;
+    race.upWind = 0;
+    race.downWind = 0;
+
+    for (var k=0;k<race.events.length;k++){
+      switch (race.events[k].type) {
+      case 0:
+race.preStart=race.events[k].duration;
+break;
+case 4:
+race.upWind+=race.events[k].duration;
+break;
+case 3:
+race.downWind+=race.events[k].duration;
+      break;
+}
+    }
+    race.preStart = Math.round(race.preStart/1000);
+    race.upWind = Math.round(race.upWind/1000);
+    race.downWind = Math.round(race.downWind/1000);
+    $scope.series.races.push(race);
+setSeries();
+console.log($scope.series);
+  }
+
+  $scope.startFunc = function(log=false) {
     if ($scope.started) {
       console.log('stop')
       $scope.started = false;
-      $scope.series.races.push($scope.race);
+      if (log) {
+      addRace();}
     }
     else {
       console.log('start');
@@ -254,7 +304,7 @@ lap.leg = $scope.legNumber;
         addLap(1);
         console.log($scope.legNumber);
         if ($scope.legNumber>$scope.legSlider.value) {
-          $scope.startFunc();
+          $scope.startFunc(true);
           $scope.legNumber--;
         }
         if (!$scope.legNumber) {
