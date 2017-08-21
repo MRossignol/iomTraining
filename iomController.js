@@ -28,6 +28,9 @@ app.controller("iomController", ['$scope', '$timeout', '$interval', '$window', '
   $scope.firstPoint = 0;
   $scope.firstPointLocation = [];
 
+  $scope.rightClick = false;
+  $scope.leftClick = false;
+
   $scope.legSlider = {
     value: 2,
     options: {
@@ -414,9 +417,15 @@ app.controller("iomController", ['$scope', '$timeout', '$interval', '$window', '
             break;
             case 33: // p up
             gotClick(true);
+        $scope.rightClick = true;
+            $timeout(function(){
+                $scope.rightClick = false;}, 2000);
             break;
             case 34: // p down
             gotClick(false);
+            $scope.leftClick = true;
+                $timeout(function(){
+                    $scope.leftClick = false;}, 2000);
             break;
           }
           console.log(e.keyCode)
