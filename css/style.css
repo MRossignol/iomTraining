@@ -46,7 +46,7 @@ rect {
 }
 
 .text {
-  font-size: 5vh;
+  font-size: 5vmin;
 }
 
 .svgText {
@@ -66,9 +66,9 @@ rect {
 }
 
 .glyphicon{
-  font-size: 10vh;
+  font-size: 10vmin;
 }
-.wi {font-size: 10vh;}
+.wi {font-size: 10vmin;}
 
 
 td {
