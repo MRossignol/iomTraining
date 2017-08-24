@@ -4,6 +4,10 @@
     -webkit-box-sizing: border-box;
 }
 
+html {
+      -webkit-text-size-adjust: 100%;
+}
+
 #page {
     text-align:center;
 }
@@ -18,8 +22,6 @@
 }
 
 
-
-
 #base {
     width: 100%;
     height: 100%;
@@ -27,7 +29,6 @@
     top: 0px;
     left: 0px;
 }
-
 
 .raceDisplay {
     border: :20px;
@@ -65,10 +66,9 @@ rect {
 }
 
 .glyphicon{
-  font-size: 5em;
+  font-size: 2em;
 }
-
-.wi {font-size: 5em;}
+.wi {font-size: 2em;}
 
 
 td {
