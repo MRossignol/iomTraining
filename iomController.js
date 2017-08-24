@@ -30,6 +30,7 @@ app.controller("iomController", ['$scope', '$timeout', '$interval', '$window', '
   $scope.currentDuration = 0;
   $scope.rightClick = false;
   $scope.leftClick = false;
+  $scope.soundDisplay = 2;
 
   $scope.legSlider = {
     value: 2,
@@ -147,7 +148,7 @@ app.controller("iomController", ['$scope', '$timeout', '$interval', '$window', '
     console.log('Done with loading audio files.');
   }
 
-  function playSound(id, start) {
+  function playSound(id=0, start=0) {
     var source = audioContext.createBufferSource(); // creates a sound source
     // console.log(buffer);
     source.buffer = bufferLoader.bufferList[id];                    // tell the source which sound to play
@@ -214,7 +215,73 @@ app.controller("iomController", ['$scope', '$timeout', '$interval', '$window', '
     race.downWind = Math.round(race.downWind/1000);
     $scope.series.races.push(race);
     setSeries();
+
     console.log($scope.series);
+  if ($scope.soundDisplay>1) {
+    var message = 'race summary ';
+
+
+    message += 'start '+Math.abs(race.preStart)+' seconds ';
+
+    if (race.preStart<0) {
+      message += ' early ';
+    }
+    else {
+      message += ' late ';
+    }
+
+    message += 'upWind '+Math.abs(race.upWind)+' seconds ';
+    message += 'downWind '+Math.abs(race.downWind)+' seconds ';
+
+    $timeout(function(){
+      var msg = new SpeechSynthesisUtterance(message);
+      msg.rate = .8;
+      window.speechSynthesis.speak(msg);
+      console.log('message '+message);
+    }, 3000);
+
+  }
+  }
+
+  function soundMessages(type, duration=0) {
+console.log('sound '+type);
+    if ($scope.soundDisplay) { // sound
+       playSound();
+
+      if ($scope.soundDisplay>1) { // speech
+var message = '';
+switch (type) {
+  case 0:
+  message = 'start ';
+  break;
+  case 1:
+  message = 'starboard tack ';
+  break;
+  case 2:
+  message = 'port tack ';
+  break;
+}
+if (duration && (type==0 || type>2)) {
+duration = Math.ceil(duration/1000);
+
+message += Math.abs(duration)+' seconds';
+}
+if (type==0) {
+  if (duration<0) {
+    message += ' early';
+  }
+  else {
+    message += ' late';
+  }
+
+}
+$timeout(function(){
+  var msg = new SpeechSynthesisUtterance(message);
+  window.speechSynthesis.speak(msg);
+  console.log('message '+message);
+}, 3000);
+      }
+    }
   }
 
   $scope.startFunc = function(log=false) {
@@ -222,7 +289,8 @@ app.controller("iomController", ['$scope', '$timeout', '$interval', '$window', '
       console.log('stop')
       $scope.started = false;
       if (log) {
-        addRace();}
+        addRace();
+      }
       }
       else {
         console.log('start');
@@ -291,9 +359,15 @@ app.controller("iomController", ['$scope', '$timeout', '$interval', '$window', '
               lep.delay = d1-d2;
               lep.type = 4;
               $scope.race.events.push(lep);
+              soundMessages(lep.type, lep.duration);
             }
+              soundMessages(lap.type, lap.duration);
+            }
+            else {
+                soundMessages(lap.type, lap.duration);
           }
-          console.log($scope.race.events);
+          console.log('event');
+      //    console.log($scope.race.events);
         }
 
         nextTack = function(side) {
@@ -306,7 +380,7 @@ app.controller("iomController", ['$scope', '$timeout', '$interval', '$window', '
         $scope.nextLeg = function(side) {
           if ($scope.started){
             addLap(1);
-            console.log('leg '+$scope.legNumber+' '+$scope.legSlider.value);
+          //  console.log('leg '+$scope.legNumber+' '+$scope.legSlider.value);
 
             if (!$scope.legNumber) {
               $scope.legNumber++;
@@ -337,7 +411,7 @@ app.controller("iomController", ['$scope', '$timeout', '$interval', '$window', '
               }
             }
           }
-          console.log($scope.race);
+      //    console.log($scope.race);
         }
 
         loadSounds();
