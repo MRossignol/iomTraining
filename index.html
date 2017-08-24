@@ -52,7 +52,7 @@
               <td ng-repeat="x in weather.data"><span  class="wi wi-wind {{x.windBearing}}" ></span></td>
           </tr>
         <tr>
-            <td ng-repeat="x in weather.data">{{x.windSpeed}} ({{x.windGust}})</td>
+            <td class="text" ng-repeat="x in weather.data">{{x.windSpeed}} ({{x.windGust}})</td>
         </tr>
         <tr>
             <td ng-repeat="x in weather.data"><dark-sky-icon icon="{{ x.icon }}"></dark-sky-icon></td>
@@ -64,16 +64,16 @@
       <div  ng-show="showStats">
         <table class="statBox">
           <tr>
-            <td>preStart</td><td> <td> {{
-              series.preStart}}</td> <td><i class="wi wi-wind towards-90-deg"></i> </td>   <td ng-repeat="x in series.races | orderBy:'':true |limitTo:6"> <span ng-class='{redstyle:$first}'>{{x.preStart}}<span></td>
+            <td class="text" >preStart</td><td> <td class="text"> {{
+              series.preStart}}</td> <td><i class="wi wi-wind towards-90-deg"></i> </td>   <td class="text" ng-repeat="x in series.races | orderBy:'':true |limitTo:6"> <span ng-class='{redstyle:$first}'>{{x.preStart}}<span></td>
           </tr>
           <tr>
-            <td>upWind</td><td> <td> {{
-              series.preStart}}</td> <td><i class="wi wi-wind towards-0-deg"></i> </td>   <td ng-repeat="x in series.races | orderBy:'':true |limitTo:6"> <span ng-class='{redstyle:$first}'>{{x.upWind}}<span></td>
+            <td class="text" >upWind</td><td> <td class="text"> {{
+              series.preStart}}</td> <td><i class="wi wi-wind towards-0-deg"></i> </td>   <td class="text" ng-repeat="x in series.races | orderBy:'':true |limitTo:6"> <span ng-class='{redstyle:$first}'>{{x.upWind}}<span></td>
           </tr>
           <tr>
-            <td>downWind</td><td> <td> {{
-              series.preStart}}</td> <td><i class="wi wi-wind towards-180-deg"></i> </td>   <td ng-repeat="x in series.races | orderBy:'':true |limitTo:6"> <span ng-class='{redstyle:$first}'>{{x.downWind}}<span></td>
+            <td class="text" >downWind</td><td> <td class="text"> {{
+              series.preStart}}</td> <td><i class="wi wi-wind towards-180-deg"></i> </td>   <td class="text" ng-repeat="x in series.races | orderBy:'':true |limitTo:6"> <span ng-class='{redstyle:$first}'>{{x.downWind}}<span></td>
           </tr>
       </table>
 
