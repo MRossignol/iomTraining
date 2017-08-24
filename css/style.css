@@ -32,7 +32,7 @@
 .raceDisplay {
     border: :20px;
   width: 98%;
-  height: 90%;
+  height: 80%;
   position: absolute;
 z-index:0;
 }
@@ -65,15 +65,18 @@ rect {
 }
 
 .glyphicon{
-  font-size: 36px;
+  font-size: 5em;
 }
+
+.wi {font-size: 5em;}
+
 
 td {
   padding : 10px;
 }
 
 .legDisplay {
-  font-size: 60px;
+  font-size: 10em;
 }
 
 .titles {text-align: center;}
@@ -81,8 +84,6 @@ td {
 .buttons {
   text-align: center;
 }
-
-.wi {font-size: 40px;}
 
 .settingsBox {
   text-align: center;

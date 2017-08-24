@@ -3,6 +3,9 @@
 
 <head>
   <meta charset="utf-8" />
+  <link rel="icon"
+      type="image/png"
+      href="images/boatOrigami.png">
   <title>RC</title>
   <script src="lib/angular.min.js"></script>
   <link rel="stylesheet" href="lib/bootstrap.min.css">
@@ -142,11 +145,9 @@
 
       <button class="wi wi-wind towards-0-deg" ng-click="startFunc()" ng-class="{redstyle: started&&tack==0}"> </button>
   <div ng-show="started">
-      <br>  <br>
       <div class="legDisplay">
   {{legNumber}}
   </div>
-  <br>
         <i ng-click="nextTack(1)" class="wi wi-wind towards-315-deg" ng-class="{redstyle: started&&tack==2}"></i>
         <i ng-click="nextTack(2)" class="wi wi-wind towards-45-deg" ng-class="{redstyle: started&&tack==1}"></i>
         <br>

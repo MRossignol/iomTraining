@@ -27,7 +27,7 @@ app.controller("iomController", ['$scope', '$timeout', '$interval', '$window', '
   $scope.tack = 0;
   $scope.firstPoint = 0;
   $scope.firstPointLocation = [];
-
+  $scope.currentDuration = 0;
   $scope.rightClick = false;
   $scope.leftClick = false;
 
