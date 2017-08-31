@@ -40,31 +40,42 @@
     <button ng-click='changeSection(1)' class="btn btn-default   btn-lg">
        <span class="glyphicon glyphicon-triangle-right"></span>
     </button>
-    <button ng-click='editMode=!editMode' class="btn btn-default   btn-lg">
-       <span  class="glyphicon glyphicon-edit"></span>
-    </button>
+    <span class='editRight'>
+    <button ng-click='editMode=!editMode' class="btn btn-default   btn-lg">  <span  class="glyphicon glyphicon-edit"></span>
+          </button>
+    </span>
+
+<div>
     <form ng-show="editMode"  ng-submit="addSection($event)">
       <input type="text" class='sectionText' ng-model="newSection" placeholder="add section" />
-      <button type="submit" class="glyphicon glyphicon-plus"></button>
+      <button type="submit" class="plusButton glyphicon glyphicon-plus"></button>
     </form>
-    <span  ng-show="editMode&&currentSection" ng-click="moveSectionUp()" class="glyphicon glyphicon-chevron-left"></span>
+    
+    <button ng-show="editMode" type="submit" ng-click=removeSection() class="editRight plusButton glyphicon glyphicon-remove"></button>
+  </div>
+    <span   ng-show="editMode&&currentSection" ng-click="moveSectionUp()" class="glyphicon glyphicon-chevron-left"></span>
 
     <span  ng-show="editMode&&currentSection<sections.length-1" ng-click="moveSectionDown()" class="glyphicon glyphicon-chevron-right"></span>
 
     <form ng-show="editMode"  ng-submit="addItem($event)">
       <input class='sectionText' type="text" ng-model="newItem" placeholder="add item" />
-      <button type="submit" class="glyphicon glyphicon-plus"></button>
+      <button type="submit" class="plusButton glyphicon glyphicon-plus"></button>
     </form>
        <ul  ng-model="sections">
-       <li class='sectionText' ng-repeat="item in sections[currentSection].items track by $index">
-         <span  ng-show="editMode" ng-click="removeItem($index)" class="glyphicon glyphicon-remove"></span>
-         <span  ng-show="editMode&&!$last" ng-click="moveItemDown($index)" class="glyphicon glyphicon-chevron-down"></span>
-         <span  ng-show="editMode&&!$first" ng-click="moveItemUp($index)" class="glyphicon glyphicon-chevron-up"></span>
-         {{item.name}}
-{{item.mean}}   <rzslider
+       <li class='itemText' ng-repeat="item in sections[currentSection].items track by $index">
+    <span class='boldstyle' >  {{item.mean}} </span>  {{item.name}}
+    <div class=rzsliderDiv>
+   <rzslider
   data-rz-slider-model="item.value"
   data-rz-slider-options="legSlider.options"
-  ></rzslider>
+  ></rzslider></div>
+         <div >
+
+         <span  ng-show="editMode&&!$last" ng-click="moveItemDown($index)" class="glyphicon glyphicon-chevron-down"></span>
+         <span  ng-show="editMode&&!$first" ng-click="moveItemUp($index)" class="glyphicon glyphicon-chevron-up"></span>
+          <div  ng-show="editMode" ng-click="removeItem($index)" class="glyphicon glyphicon-remove editRight"></div>
+       </div>
+
         </li>
      </ul>
      <pre>section={{section}}</pre>

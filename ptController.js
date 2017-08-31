@@ -65,6 +65,13 @@ $scope.addSection =function(e){
 }
 }
 
+$scope.removeSection =function(){
+  if ($scope.currentSection) {
+$scope.sections.splice($scope.currentSection, 1);
+$scope.currentSection -= 1;
+}
+}
+
 $scope.changeSection =function(direction){
 
 // save data and compute mean

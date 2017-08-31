@@ -96,5 +96,14 @@ td {
 .bgredstyle {background-color: red;}
 .boldstyle {font-weight: bold;}
 
-.sectionText {  font-size: 3vh;}
-.itemText {  font-size: 10vh;}
+.sectionText {  font-size: 4vmin;}
+.itemText {  font-size: 4vmin;}
+.editRight {
+     float:right;
+     width:15vmin;
+     height:15vmin;
+  }
+
+  .plusButton {font-size: 6vmin;}
+
+.rzsliderDiv {padding-top:20px}
