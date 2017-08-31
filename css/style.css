@@ -94,3 +94,7 @@ td {
 .style {color: black;}
 .redstyle {color: red;}
 .bgredstyle {background-color: red;}
+.boldstyle {font-weight: bold;}
+
+.sectionText {  font-size: 3vh;}
+.itemText {  font-size: 10vh;}

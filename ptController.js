@@ -28,14 +28,6 @@ for (var k=0;k<items.length;k++){
 }
 $scope.sections.push(section);
 
-$scope.addSection =function(e){
-  if ($scope.newSection) {
-  var section = {items: [], name: $scope.newSection};
-  $scope.sections.push(section);
-  $scope.newSection='';
-}
-}
-
 $scope.addItem =function(e){
   if ($scope.newItem) {
   var item = {value: 0, mean: 0, data: [], name: $scope.newItem};
@@ -64,7 +56,16 @@ $scope.sections.splice($scope.currentSection+1, 0, $scope.sections.splice($scope
 $scope.currentSection += 1;
 }
 
-$scope.next =function(){
+$scope.addSection =function(e){
+  if ($scope.newSection) {
+  var section = {items: [], name: $scope.newSection};
+  $scope.sections.push(section);
+  $scope.newSection='';
+  $scope.currentSection += 1;
+}
+}
+
+$scope.changeSection =function(direction){
 
 // save data and compute mean
 for (var k=0;k<$scope.sections[$scope.currentSection].items.length;k++){
@@ -76,7 +77,10 @@ $scope.sections[$scope.currentSection].items[k].mean = $scope.sections[$scope.cu
 }
 }
 // move to next section
-$scope.currentSection = ($scope.currentSection+1) % ($scope.sections.length);
+$scope.currentSection = ($scope.currentSection+direction) % ($scope.sections.length);
+if ($scope.currentSection<0) {
+  $scope.currentSection = $scope.sections.length-1;
+}
 console.log($scope.currentSection);
 }
 

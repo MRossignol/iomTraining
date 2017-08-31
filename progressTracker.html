@@ -33,25 +33,30 @@
 
 <body id="body">
   <div class="page" ng-controller="ptController">
-    <button ng-click='next()' class="btn btn-default   btn-lg">
+    <button ng-click='changeSection(-1)' class="btn btn-default   btn-lg">
+       <span class="glyphicon glyphicon-triangle-left"></span>
+    </button>
+      <span ng-repeat='section in sections track by $index' class='sectionText' ng-show="$index>currentSection-2&&$index<currentSection+2" ng-class="{boldstyle: currentSection == $index}"> {{section.name}} </span>
+    <button ng-click='changeSection(1)' class="btn btn-default   btn-lg">
        <span class="glyphicon glyphicon-triangle-right"></span>
     </button>
     <button ng-click='editMode=!editMode' class="btn btn-default   btn-lg">
        <span  class="glyphicon glyphicon-edit"></span>
     </button>
     <form ng-show="editMode"  ng-submit="addSection($event)">
-      <input type="text" ng-model="newSection" placeholder="add section" />
+      <input type="text" class='sectionText' ng-model="newSection" placeholder="add section" />
       <button type="submit" class="glyphicon glyphicon-plus"></button>
     </form>
-    <span  ng-show="editMode&&currentSection<sections.length-1" ng-click="moveSectionDown()" class="glyphicon glyphicon-chevron-down"></span>
-    <span  ng-show="editMode&&currentSection" ng-click="moveSectionUp()" class="glyphicon glyphicon-chevron-up"></span>
-    <div ng-repeat='section in sections track by $index' ng-class="{redstyle: currentSection == $index}"> {{section.name}} </div>
+    <span  ng-show="editMode&&currentSection" ng-click="moveSectionUp()" class="glyphicon glyphicon-chevron-left"></span>
+
+    <span  ng-show="editMode&&currentSection<sections.length-1" ng-click="moveSectionDown()" class="glyphicon glyphicon-chevron-right"></span>
+
     <form ng-show="editMode"  ng-submit="addItem($event)">
-      <input type="text" ng-model="newItem" placeholder="add item" />
+      <input class='sectionText' type="text" ng-model="newItem" placeholder="add item" />
       <button type="submit" class="glyphicon glyphicon-plus"></button>
     </form>
        <ul  ng-model="sections">
-       <li ng-repeat="item in sections[currentSection].items track by $index">
+       <li class='sectionText' ng-repeat="item in sections[currentSection].items track by $index">
          <span  ng-show="editMode" ng-click="removeItem($index)" class="glyphicon glyphicon-remove"></span>
          <span  ng-show="editMode&&!$last" ng-click="moveItemDown($index)" class="glyphicon glyphicon-chevron-down"></span>
          <span  ng-show="editMode&&!$first" ng-click="moveItemUp($index)" class="glyphicon glyphicon-chevron-up"></span>
