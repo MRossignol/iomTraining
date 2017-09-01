@@ -119,3 +119,15 @@ td {
 .color-red .rz-pointer {
   background-color:red;
 }
+
+.color-green-text  {
+background-color: green;
+}
+
+.color-blue-text  {
+  color: blue;
+}
+
+.color-red-text {
+  color:red;
+}

@@ -63,11 +63,14 @@
     </form>
        <ul  ng-model="sections">
        <li class='itemText' ng-repeat="item in sections[currentSection].items track by $index">
-    <span class='boldstyle' >  {{item.mean}} </span>  {{item.name}}
+    <span class='boldstyle' ng-class="{
+        'color-red-text': item.mean < 3,
+        'color-blue-text': item.mean >= 3 && item.mean < 7,
+        'color-green-text': item.mean > 7}">  {{item.mean}} </span>  {{item.name}}
     <div class='rzsliderDiv' ng-class="{
-        'color-red': item.mean < 3,
-        'color-blue': item.mean >= 3 && item.mean < 7,
-        'color-green': item.mean > 7}">
+        'color-red': item.previous < 3,
+        'color-blue': item.previous >= 3 && item.previous < 7,
+        'color-green': item.previous > 7}">
    <rzslider
   data-rz-slider-model="item.value"
   data-rz-slider-options="legSlider.options"

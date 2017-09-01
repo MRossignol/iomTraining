@@ -23,7 +23,7 @@ var section = [];
 section.items = [];
 section.name = 'tuning';
 for (var k=0;k<items.length;k++){
-  var item = {value: 0, mean: 0, data: [], name: items[k]};
+  var item = {value: 0, previous: 0, mean: 0, data: [], name: items[k]};
   section.items.push(item);
 }
 $scope.sections.push(section);
@@ -79,9 +79,11 @@ console.log($scope.sections);
 for (var k=0;k<$scope.sections[$scope.currentSection].items.length;k++){
 if ($scope.sections[$scope.currentSection].items[k].value) {
 $scope.sections[$scope.currentSection].items[k].data.push($scope.sections[$scope.currentSection].items[k].value);
+$scope.sections[$scope.currentSection].items[k].previous = $scope.sections[$scope.currentSection].items[k].value;
 $scope.sections[$scope.currentSection].items[k].value = 0;
 
-$scope.sections[$scope.currentSection].items[k].mean = $scope.sections[$scope.currentSection].items[k].data.reduce(( p, c ) => p + c, 0 )/$scope.sections[$scope.currentSection].items[k].data.length;
+var mean = $scope.sections[$scope.currentSection].items[k].data.reduce(( p, c ) => p + c, 0 )/$scope.sections[$scope.currentSection].items[k].data.length;
+$scope.sections[$scope.currentSection].items[k].mean = mean.toFixed(1);
 }
 }
 // move to next section

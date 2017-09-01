@@ -4,15 +4,13 @@ app.controller("iomController", ['$scope', '$timeout', '$interval', '$window', '
   var timing = 0;
   var bufferLoader = null;
 
-
-
   $scope.newSeries = function() {
     $scope.series.preStart = 0;
     $scope.series.upWind = 0;
     $scope.series.downWind = 0;
     $scope.series.races = []
   }
-  
+
   $scope.series = [];
   $scope.newSeries();
   $scope.race = [];
