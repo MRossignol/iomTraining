@@ -4,11 +4,17 @@ app.controller("iomController", ['$scope', '$timeout', '$interval', '$window', '
   var timing = 0;
   var bufferLoader = null;
 
+
+
+  $scope.newSeries = function() {
+    $scope.series.preStart = 0;
+    $scope.series.upWind = 0;
+    $scope.series.downWind = 0;
+    $scope.series.races = []
+  }
+  
   $scope.series = [];
-  $scope.series.preStart = 0;
-  $scope.series.upWind = 0;
-  $scope.series.downWind = 0;
-  $scope.series.races = [];
+  $scope.newSeries();
   $scope.race = [];
   $scope.upLegs = [];
   $scope.downLegs = [];
@@ -22,6 +28,8 @@ app.controller("iomController", ['$scope', '$timeout', '$interval', '$window', '
   $scope.legNumber = 0;
   $scope.showSettings = false;
   $scope.showStats = false;
+  $scope.showSkills = false;
+  $scope.showRace = true;
   $scope.clickRight = 0;
   $scope.clickLeft = 0;
   $scope.tack = 0;

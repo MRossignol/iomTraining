@@ -30,11 +30,15 @@
 
 <body id="body">
   <div class="page" ng-controller="iomController">
-
-
     <div class = "buttons">
       <button ng-click='wake()' class="btn btn-default   btn-lg">
          <span ng-class="{redstyle: wakeLockEnabled}" class="glyphicon glyphicon-sound-stereo"></span>
+      </button>
+      <button ng-click='showRace = !showRace' class="btn btn-default   btn-lg">
+         <span ng-class="{redstyle: showRace}" class="glyphicon glyphicon-flag"></span>
+      </button>
+      <button ng-click='showSkills = !showSkills' class="btn btn-default btn-lg">
+         <span ng-class="{redstyle: showSkills}" class="glyphicon glyphicon-tasks"></span>
       </button>
       <button ng-click='showWeather()' class="btn btn-default  btn-lg">
          <dark-sky-icon ng-class="{redstyle: weatherDisplayed}"  icon="{{ weather.currently.icon }}"></dark-sky-icon>
@@ -85,6 +89,10 @@
       </div>
 
     <div class="settingsBox" ng-show="showSettings">
+      <h2 class='titles'>Series</h2>
+      <span ng-click='newSeries()' class="btn btn-default  btn-lg">
+        <div class="glyphicon glyphicon-eject"> </div>
+    </span>
       <h2 class='titles'>Legs</h2>
       <span ng-click='raceType=!raceType' class="btn btn-default  btn-lg">
         <div ng-show="!raceType" class="glyphicon glyphicon-repeat"> </div>
@@ -110,12 +118,10 @@
         ></rzslider>
     </div>
 
-
-
     <br>
 
-
-    <svg id="raceDisplay" class="raceDisplay"  >
+<div ng-show='showRace'>
+    <svg id="raceDisplay" class="raceDisplay" >
       <line x1="25%" y1="5%" x2="25%" y2="95%" style="stroke:black;" />
       <circle ng-show="upLeg&&started" cx="25%" ng-attr-cy="{{(1-currentDuration/(maxDuration*1.2))*90-5}}%"  r="6px" fill="red" />
       <rect ng-repeat="a in race.events"  ng-attr-x="{{25-5+a.delay/a.duration*5}}%" ng-attr-y="{{(1-a.duration/(maxDuration*1.2))*90-5}}%" rx="10" ry="10" ng-attr-width="{{10*(a.type==4)}}%" height="20px" />
@@ -134,15 +140,6 @@
       <line x1="50%" y1="87%" x2="50%" y2="93%" style="stroke:black;" />
 
       <rect ng-repeat="a in race.events" " ng-attr-x="{{50+a.duration/1000}}%" y="85%" rx="10" ry="10" width="2%" ng-attr-height="{{10*(a.type==0)}}%" />
-
-
-
-
-
-
-
-
-
     </svg>
     <div class="infoDisplay">
       <button class="wi wi-wind towards-0-deg" ng-click="startFunc()" ng-class="{redstyle: started&&tack==0}"> </button>
@@ -159,12 +156,8 @@
     <br>
     <i class="wi wi-wind towards-270-deg" ng-show="leftClick"></i>
     <i class="wi wi-wind towards-90-deg" ng-show="rightClick"></i>
-
-
-
-
-
-    </div>
+  </div>
+</div>
   </div>
 
 

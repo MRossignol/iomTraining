@@ -107,3 +107,15 @@ td {
   .plusButton {font-size: 6vmin;}
 
 .rzsliderDiv {padding-top:20px}
+
+.color-green .rz-pointer  {
+  color: green;
+}
+
+.color-blue .rz-pointer  {
+  color: blue;
+}
+
+.color-red .rz-pointer {
+  background-color:red;
+}

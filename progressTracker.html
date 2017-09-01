@@ -50,7 +50,7 @@
       <input type="text" class='sectionText' ng-model="newSection" placeholder="add section" />
       <button type="submit" class="plusButton glyphicon glyphicon-plus"></button>
     </form>
-    
+
     <button ng-show="editMode" type="submit" ng-click=removeSection() class="editRight plusButton glyphicon glyphicon-remove"></button>
   </div>
     <span   ng-show="editMode&&currentSection" ng-click="moveSectionUp()" class="glyphicon glyphicon-chevron-left"></span>
@@ -64,7 +64,10 @@
        <ul  ng-model="sections">
        <li class='itemText' ng-repeat="item in sections[currentSection].items track by $index">
     <span class='boldstyle' >  {{item.mean}} </span>  {{item.name}}
-    <div class=rzsliderDiv>
+    <div class='rzsliderDiv' ng-class="{
+        'color-red': item.mean < 3,
+        'color-blue': item.mean >= 3 && item.mean < 7,
+        'color-green': item.mean > 7}">toto
    <rzslider
   data-rz-slider-model="item.value"
   data-rz-slider-options="legSlider.options"
