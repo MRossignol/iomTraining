@@ -73,14 +73,15 @@ $scope.currentSection -= 1;
 }
 
 $scope.changeSection =function(direction){
-
+  console.log($scope.currentSection);
+console.log($scope.sections);
 // save data and compute mean
 for (var k=0;k<$scope.sections[$scope.currentSection].items.length;k++){
 if ($scope.sections[$scope.currentSection].items[k].value) {
 $scope.sections[$scope.currentSection].items[k].data.push($scope.sections[$scope.currentSection].items[k].value);
 $scope.sections[$scope.currentSection].items[k].value = 0;
 
-$scope.sections[$scope.currentSection].items[k].mean = $scope.sections[$scope.currentSection].items[k].data.reduce(( p, c ) => p + c, 0 )/$scope.sections[$scope.currentSection][$scope.currentSection].items[k].data.length;
+$scope.sections[$scope.currentSection].items[k].mean = $scope.sections[$scope.currentSection].items[k].data.reduce(( p, c ) => p + c, 0 )/$scope.sections[$scope.currentSection].items[k].data.length;
 }
 }
 // move to next section

@@ -109,11 +109,11 @@ td {
 .rzsliderDiv {padding-top:20px}
 
 .color-green .rz-pointer  {
-  color: green;
+  background-color: green;
 }
 
 .color-blue .rz-pointer  {
-  color: blue;
+  background-color: blue;
 }
 
 .color-red .rz-pointer {
