@@ -3,6 +3,8 @@ app.controller("iomController", ['$scope', '$timeout', '$interval', '$window', '
   var meter = null;
   var timing = 0;
   var bufferLoader = null;
+  var uttId = 0;
+  var messages = [];
 
   $scope.newSeries = function() {
     $scope.series.preStart = 0;
@@ -27,7 +29,7 @@ app.controller("iomController", ['$scope', '$timeout', '$interval', '$window', '
   $scope.showSettings = false;
   $scope.showStats = false;
   $scope.showSkills = false;
-  $scope.showRace = true;
+  $scope.showRace = false;
   $scope.clickRight = 0;
   $scope.clickLeft = 0;
   $scope.tack = 0;
@@ -151,6 +153,7 @@ app.controller("iomController", ['$scope', '$timeout', '$interval', '$window', '
   }
 
   function finishedLoading(){
+    $scope.showRace = true;
     console.log('Done with loading audio files.');
   }
 
@@ -196,6 +199,22 @@ app.controller("iomController", ['$scope', '$timeout', '$interval', '$window', '
     $scope.series.downWind = Math.round($scope.series.downWind);
   }
 
+  function speechUtteranceFunc() {
+      var msg = new SpeechSynthesisUtterance(messages[uttId++]);
+      msg.rate = .8;
+      msg.lang = 'en-US';
+      msg.onend = function(e) {
+        if (uttId<messages.length) {
+          var scb = speechUtteranceFunc;
+              $timeout(scb, 1000);
+        }
+        else {
+          uttId=0;
+        }
+            }
+      window.speechSynthesis.speak(msg);
+  }
+
   function addRace() {
     var race = $scope.race;
     console.log(race);
@@ -224,10 +243,10 @@ app.controller("iomController", ['$scope', '$timeout', '$interval', '$window', '
 
     console.log($scope.series);
   if ($scope.soundDisplay>1) {
-    var message = 'race summary ';
+    messages.push('race summary ');
 
 
-    message += 'start '+Math.abs(race.preStart)+' seconds ';
+    var message = 'start '+Math.abs(race.preStart)+' seconds ';
 
     if (race.preStart<0) {
       message += ' early ';
@@ -235,17 +254,13 @@ app.controller("iomController", ['$scope', '$timeout', '$interval', '$window', '
     else {
       message += ' late ';
     }
+    messages.push(message);
+    messages.push('upWind '+Math.abs(race.upWind)+' seconds ');
+    messages.push('downWind '+Math.abs(race.downWind)+' seconds ');
 
-    message += 'upWind '+Math.abs(race.upWind)+' seconds ';
-    message += 'downWind '+Math.abs(race.downWind)+' seconds ';
-
-    $timeout(function(){
-      var msg = new SpeechSynthesisUtterance(message);
-      msg.rate = .8;
-      window.speechSynthesis.speak(msg);
-      console.log('message '+message);
-    }, 3000);
-
+var scb = speechUtteranceFunc
+    $timeout(scb, 5000);
+ console.log('summary in 8 secs');
   }
   }
 
@@ -285,7 +300,7 @@ $timeout(function(){
   var msg = new SpeechSynthesisUtterance(message);
   window.speechSynthesis.speak(msg);
   console.log('message '+message);
-}, 3000);
+}, 1000);
       }
     }
   }

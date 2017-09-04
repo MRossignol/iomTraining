@@ -4,8 +4,8 @@
 <head>
   <meta charset="utf-8" />
   <link rel="icon"
-      type="image/png"
-      href="images/boatOrigami.png">
+  type="image/png"
+  href="images/boatOrigami.png">
   <title>RC</title>
   <script src="lib/angular.min.js"></script>
   <link rel="stylesheet" href="lib/bootstrap.min.css">
@@ -19,12 +19,13 @@
   <script src="lib/NoSleep.min.js"></script>
   <script src="app.js"></script>
   <script src="iomController.js"></script>
+  <script src="ptController.js"></script>
 
   <link rel="stylesheet" type="text/css" href="css/weather-icons.min.css"/>
   <link rel="stylesheet" type="text/css" href="css/weather-icons-wind.min.css"/>
   <link href='https://fonts.googleapis.com/css?family=Cousine:700' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-      <link rel="stylesheet" type="text/css" href="css/style.css"/>
+  <link rel="stylesheet" type="text/css" href="css/style.css"/>
 
 </head>
 
@@ -32,72 +33,137 @@
   <div class="page" ng-controller="iomController">
     <div class = "buttons">
       <button ng-click='wake()' class="btn btn-default   btn-lg">
-         <span ng-class="{redstyle: wakeLockEnabled}" class="glyphicon glyphicon-sound-stereo"></span>
+        <span ng-class="{redstyle: wakeLockEnabled}" class="glyphicon glyphicon-sound-stereo"></span>
       </button>
       <button ng-click='showRace = !showRace' class="btn btn-default   btn-lg">
-         <span ng-class="{redstyle: showRace}" class="glyphicon glyphicon-flag"></span>
+        <span ng-class="{redstyle: showRace}" class="glyphicon glyphicon-flag"></span>
       </button>
       <button ng-click='showSkills = !showSkills' class="btn btn-default btn-lg">
-         <span ng-class="{redstyle: showSkills}" class="glyphicon glyphicon-tasks"></span>
+        <span ng-class="{redstyle: showSkills}" class="glyphicon glyphicon-tasks"></span>
       </button>
       <button ng-click='showWeather()' class="btn btn-default  btn-lg">
-         <dark-sky-icon ng-class="{redstyle: weatherDisplayed}"  icon="{{ weather.currently.icon }}"></dark-sky-icon>
+        <dark-sky-icon ng-class="{redstyle: weatherDisplayed}"  icon="{{ weather.currently.icon }}"></dark-sky-icon>
       </button>
       <button class="btn btn-default   btn-lg" ng-click='showStats = !showStats'>
-         <span   ng-class="{redstyle: showStats}" class="glyphicon glyphicon-stats"></span>
+        <span   ng-class="{redstyle: showStats}" class="glyphicon glyphicon-stats"></span>
       </button>
       <button ng-click='showSettings = !showSettings' class="btn btn-default  btn-lg">
-          <span ng-class="{redstyle: showSettings}" class="glyphicon glyphicon-cog"></span>
+        <span ng-class="{redstyle: showSettings}" class="glyphicon glyphicon-cog"></span>
       </button>
       <button ng-click='soundDisplay=(soundDisplay+1)%3' class="btn btn-default  btn-lg">
         <div ng-show="!soundDisplay" class="glyphicon glyphicon-volume-off"> </div>
         <div ng-show="soundDisplay==1" class="glyphicon glyphicon-volume-down"> </div>
         <div ng-show="soundDisplay==2" class="glyphicon glyphicon-volume-up"> </div>
-    </button>
+      </button>
     </div>
-      <div  ng-show="weatherDisplayed">
-        <table class="weatherBox">
-          <tr>
-              <td ng-repeat="x in weather.data"><span  class="wi wi-wind {{x.windBearing}}" ></span></td>
-          </tr>
+    <div  ng-show="weatherDisplayed">
+      <table class="weatherBox">
         <tr>
-            <td class="text" ng-repeat="x in weather.data">{{x.windSpeed}} ({{x.windGust}})</td>
+          <td ng-repeat="x in weather.data"><span  class="wi wi-wind {{x.windBearing}}" ></span></td>
         </tr>
         <tr>
-            <td ng-repeat="x in weather.data"><dark-sky-icon icon="{{ x.icon }}"></dark-sky-icon></td>
+          <td class="text" ng-repeat="x in weather.data">{{x.windSpeed}} ({{x.windGust}})</td>
+        </tr>
+        <tr>
+          <td ng-repeat="x in weather.data"><dark-sky-icon icon="{{ x.icon }}"></dark-sky-icon></td>
         </tr>
       </table>
 
-      </div>
+    </div>
 
-      <div  ng-show="showStats">
-        <table class="statBox">
-          <tr>
-            <td class="text" >preStart</td><td> <td class="text"> {{
-              series.preStart}}</td> <td><i class="wi wi-wind towards-90-deg"></i> </td>   <td class="text" ng-repeat="x in series.races | orderBy:'':true |limitTo:6"> <span ng-class='{redstyle:$first}'>{{x.preStart}}<span></td>
-          </tr>
-          <tr>
-            <td class="text" >upWind</td><td> <td class="text"> {{
-              series.preStart}}</td> <td><i class="wi wi-wind towards-0-deg"></i> </td>   <td class="text" ng-repeat="x in series.races | orderBy:'':true |limitTo:6"> <span ng-class='{redstyle:$first}'>{{x.upWind}}<span></td>
-          </tr>
-          <tr>
-            <td class="text" >downWind</td><td> <td class="text"> {{
-              series.preStart}}</td> <td><i class="wi wi-wind towards-180-deg"></i> </td>   <td class="text" ng-repeat="x in series.races | orderBy:'':true |limitTo:6"> <span ng-class='{redstyle:$first}'>{{x.downWind}}<span></td>
-          </tr>
+
+      <div ng-show='showSkills' ng-controller="ptController">
+        <button ng-click='changeSection(-1)' class="btn btn-default   btn-lg">
+          <span class="glyphicon glyphicon-triangle-left"></span>
+        </button>
+        <span ng-repeat='section in sections track by $index' class='sectionText' ng-show="$index>currentSection-2&&$index<currentSection+2" ng-class="{boldstyle: currentSection == $index}"> {{section.name}} </span>
+        <button ng-click='changeSection(1)' class="btn btn-default   btn-lg">
+          <span class="glyphicon glyphicon-triangle-right"></span>
+        </button>
+        <span class='editRight'>
+          <button ng-click='editMode=!editMode' class="btn btn-default   btn-lg">  <span  class="glyphicon glyphicon-edit"></span>
+          </button>
+        </span>
+        <div>
+          <button ng-show="editMode" type="submit" ng-click=removeSection() class="removeRight plusButton glyphicon glyphicon-remove"></button>
+          <form ng-show="editMode"  ng-submit="addSection($event)">
+            <input type="text" class='sectionText form' ng-model="newSection" placeholder="add section" />
+            <button type="submit" class="plusButton glyphicon glyphicon-plus"></button>
+          </form>
+
+        </div>
+        <span   ng-show="editMode&&currentSection" ng-click="moveSectionUp()" class="glyphicon glyphicon-chevron-left"></span>
+
+        <span  ng-show="editMode&&currentSection<sections.length-1" ng-click="moveSectionDown()" class="glyphicon glyphicon-chevron-right"></span>
+
+        <form ng-show="editMode"  ng-submit="addItem($event)">
+          <input class='sectionText form' type="text" ng-model="newItem" placeholder="add item" />
+          <button type="submit" class="plusButton glyphicon glyphicon-plus"></button>
+        </form>
+        <ul  ng-model="sections">
+          <li class='itemText' ng-repeat="item in sections[currentSection].items track by $index">
+            <span class='boldstyle' ng-class="{
+              'color-red-text': item.mean < 3,
+              'color-blue-text': item.mean >= 3 && item.mean < 7,
+              'color-green-text': item.mean > 7}">  {{item.mean}}
+            </span>  {{item.name}}
+            <div class='rzsliderDiv' ng-class="{
+              'color-red': item.previous < 3,
+              'color-blue': item.previous >= 3 && item.previous < 7,
+              'color-green': item.previous > 7}">
+              <rzslider
+              data-rz-slider-model="item.value"
+              data-rz-slider-options="legSlider.options"
+              ></rzslider>
+            </div>
+            <div >
+              <span  ng-show="editMode&&!$last" ng-click="moveItemDown($index)" class="glyphicon glyphicon-chevron-down"></span>
+              <span  ng-show="editMode&&!$first" ng-click="moveItemUp($index)" class="glyphicon glyphicon-chevron-up"></span>
+              <div  ng-show="editMode" ng-click="removeItem($index)" class="glyphicon glyphicon-remove editRight"></div>
+            </div>
+          </li>
+        </ul>
+          </div>
+
+    <div  ng-show="showStats">
+      <table class="statBox">
+        <tr>
+          <td class="text" >preStart</td>
+          <td class="text"> {{series.preStart}}</td>
+          <td><i class="wi wi-wind towards-90-deg"></i> </td>
+          <td class="text" ng-repeat="x in series.races | orderBy:'':true |limitTo:6">
+            <span ng-class='{redstyle:$first}'>{{x.preStart}}</span>
+          </td>
+        </tr>
+        <tr>
+          <td class="text" >upWind</td>
+          <td class="text"> {{series.preStart}}</td>
+          <td><i class="wi wi-wind towards-0-deg"></i> </td>
+          <td class="text" ng-repeat="x in series.races | orderBy:'':true |limitTo:6">
+            <span ng-class='{redstyle:$first}'>{{x.upWind}}</span>
+          </td>
+        </tr>
+        <tr>
+          <td class="text" >downWind</td>
+          <td class="text"> {{series.preStart}}</td>
+          <td><i class="wi wi-wind towards-180-deg"></i> </td>
+          <td class="text" ng-repeat="x in series.races | orderBy:'':true |limitTo:6">
+            <span ng-class='{redstyle:$first}'>{{x.downWind}}</span>
+          </td>
+        </tr>
       </table>
-
-      </div>
+    </div>
 
     <div class="settingsBox" ng-show="showSettings">
       <h2 class='titles'>Series</h2>
       <span ng-click='newSeries()' class="btn btn-default  btn-lg">
         <div class="glyphicon glyphicon-eject"> </div>
-    </span>
+      </span>
       <h2 class='titles'>Legs</h2>
       <span ng-click='raceType=!raceType' class="btn btn-default  btn-lg">
         <div ng-show="!raceType" class="glyphicon glyphicon-repeat"> </div>
         <div ng-show="raceType" class="glyphicon glyphicon-refresh"> </div>
-    </span>
+      </span>
       <rzslider
       data-rz-slider-model="legSlider.value"
       data-rz-slider-options="legSlider.options"
@@ -108,58 +174,56 @@
       data-rz-slider-model="startSlider.value"
       data-rz-slider-options="startSlider.options"
       ></rzslider>
-       <h2 class='titles'  >Distance</h2>
-       <span ng-click='setDistance()' class="btn btn-default  btn-lg">
-           <div ng-class="{redstyle: firstPoint}" class="glyphicon glyphicon-map-marker"></div>
-       </span>
-        <rzslider
-        data-rz-slider-model="distanceSlider.value"
-        data-rz-slider-options="distanceSlider.options"
-        ></rzslider>
+      <h2 class='titles'  >Distance</h2>
+      <span ng-click='setDistance()' class="btn btn-default  btn-lg">
+        <div ng-class="{redstyle: firstPoint}" class="glyphicon glyphicon-map-marker"></div>
+      </span>
+      <rzslider
+      data-rz-slider-model="distanceSlider.value"
+      data-rz-slider-options="distanceSlider.options"
+      ></rzslider>
     </div>
 
     <br>
 
-<div ng-show='showRace'>
-    <svg id="raceDisplay" class="raceDisplay" >
-      <line x1="25%" y1="5%" x2="25%" y2="95%" style="stroke:black;" />
-      <circle ng-show="upLeg&&started" cx="25%" ng-attr-cy="{{(1-currentDuration/(maxDuration*1.2))*90-5}}%"  r="6px" fill="red" />
-      <rect ng-repeat="a in race.events"  ng-attr-x="{{25-5+a.delay/a.duration*5}}%" ng-attr-y="{{(1-a.duration/(maxDuration*1.2))*90-5}}%" rx="10" ry="10" ng-attr-width="{{10*(a.type==4)}}%" height="20px" />
-      <text text-anchor="middle" ng-repeat="a in race.events" class="svgText" ng-attr-x="{{25+a.delay/a.duration*5}}%" ng-attr-y="{{(1-a.duration/(maxDuration*1.2))*90-5+3.5}}%" font-family="Verdana" ng-attr-font-size="{{20*(a.type==4)}}">
+    <div ng-show='showRace'>
+      <svg id="raceDisplay" class="raceDisplay" >
+        <line x1="25%" y1="5%" x2="25%" y2="95%" style="stroke:black;" />
+        <circle ng-show="upLeg&&started" cx="25%" ng-attr-cy="{{(1-currentDuration/(maxDuration*1.2))*90-5}}%"  r="6px" fill="red" />
+        <rect ng-repeat="a in race.events"  ng-attr-x="{{25-5+a.delay/a.duration*5}}%" ng-attr-y="{{(1-a.duration/(maxDuration*1.2))*90-5}}%" rx="10" ry="10" ng-attr-width="{{10*(a.type==4)}}%" height="20px" />
+        <text text-anchor="middle" ng-repeat="a in race.events" class="svgText" ng-attr-x="{{25+a.delay/a.duration*5}}%" ng-attr-y="{{(1-a.duration/(maxDuration*1.2))*90-5+3.5}}%" font-family="Verdana" ng-attr-font-size="{{20*(a.type==4)}}">
           {{a.leg}}
         </text>
 
-      <line ng-show="raceType" x1="75%" y1="5%" x2="75%" y2="95%" style="stroke:black;" />
-      <circle ng-show="raceType&&!upLeg&&started" cx="75%" ng-attr-cy="{{(currentDuration/(maxDuration*1.2))*90+5}}%"  r="6px" fill="red" />
-      <rect ng-show="raceType" ng-repeat="a in race.events"  x="70%" ng-attr-y="{{(a.duration/(maxDuration*1.2))*90+5}}%" rx="10" ry="10" ng-attr-width="{{10*(a.type==3)}}%" height="20px" />
-      <text ng-show="raceType" text-anchor="middle" ng-repeat="a in race.events" class="svgText" x="75%" ng-attr-y="{{(a.duration/(maxDuration*1.2))*90+5+3.5}}%" font-family="Verdana" ng-attr-font-size="{{20*(a.type==3)}}">
+        <line ng-show="raceType" x1="75%" y1="5%" x2="75%" y2="95%" style="stroke:black;" />
+        <circle ng-show="raceType&&!upLeg&&started" cx="75%" ng-attr-cy="{{(currentDuration/(maxDuration*1.2))*90+5}}%"  r="6px" fill="red" />
+        <rect ng-show="raceType" ng-repeat="a in race.events"  x="70%" ng-attr-y="{{(a.duration/(maxDuration*1.2))*90+5}}%" rx="10" ry="10" ng-attr-width="{{10*(a.type==3)}}%" height="20px" />
+        <text ng-show="raceType" text-anchor="middle" ng-repeat="a in race.events" class="svgText" x="75%" ng-attr-y="{{(a.duration/(maxDuration*1.2))*90+5+3.5}}%" font-family="Verdana" ng-attr-font-size="{{20*(a.type==3)}}">
           {{a.leg}}
-      </text>
+        </text>
 
-      <line x1="40%" y1="90%" x2="60%" y2="90%" style="stroke:black;" />
-      <line x1="50%" y1="87%" x2="50%" y2="93%" style="stroke:black;" />
+        <line x1="40%" y1="90%" x2="60%" y2="90%" style="stroke:black;" />
+        <line x1="50%" y1="87%" x2="50%" y2="93%" style="stroke:black;" />
 
-      <rect ng-repeat="a in race.events" " ng-attr-x="{{50+a.duration/1000}}%" y="85%" rx="10" ry="10" width="2%" ng-attr-height="{{10*(a.type==0)}}%" />
-    </svg>
-    <div class="infoDisplay">
-      <button class="wi wi-wind towards-0-deg" ng-click="startFunc()" ng-class="{redstyle: started&&tack==0}"> </button>
-  <div ng-show="started">
-      <div class="legDisplay">
-  {{legNumber}}
-  </div>
-        <i ng-click="nextTack(1)" class="wi wi-wind towards-315-deg" ng-class="{redstyle: started&&tack==2}"></i>
-        <i ng-click="nextTack(2)" class="wi wi-wind towards-45-deg" ng-class="{redstyle: started&&tack==1}"></i>
+        <rect ng-repeat="a in race.events" ng-attr-x="{{50+a.duration/1000}}%" y="85%" rx="10" ry="10" width="2%" ng-attr-height="{{10*(a.type==0)}}%" />
+      </svg>
+      <div class="infoDisplay">
+        <button class="wi wi-wind towards-0-deg" ng-click="startFunc()" ng-class="{redstyle: started&&tack==0}"> </button>
+        <div ng-show="started">
+          <div class="legDisplay">
+            {{legNumber}}
+          </div>
+          <i ng-click="nextTack(1)" class="wi wi-wind towards-315-deg" ng-class="{redstyle: started&&tack==2}"></i>
+          <i ng-click="nextTack(2)" class="wi wi-wind towards-45-deg" ng-class="{redstyle: started&&tack==1}"></i>
+          <br>
+          <i ng-click="nextLeg(1)" class="wi wi-wind towards-180-deg" ng-class="{redstyle: started&&tack==3}"></i>
+          <br><br>
+        </div>
         <br>
-        <i ng-click="nextLeg(1)" class="wi wi-wind towards-180-deg" ng-class="{redstyle: started&&tack==3}"></i>
-        <br><br>
+        <i class="wi wi-wind towards-270-deg" ng-show="leftClick"></i>
+        <i class="wi wi-wind towards-90-deg" ng-show="rightClick"></i>
+      </div>
     </div>
-    <br>
-    <i class="wi wi-wind towards-270-deg" ng-show="leftClick"></i>
-    <i class="wi wi-wind towards-90-deg" ng-show="rightClick"></i>
   </div>
-</div>
-  </div>
-
-
 </body>
 </html>
