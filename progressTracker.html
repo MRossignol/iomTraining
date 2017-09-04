@@ -41,24 +41,23 @@
        <span class="glyphicon glyphicon-triangle-right"></span>
     </button>
     <span class='editRight'>
-    <button ng-click='editMode=!editMode' class="btn btn-default   btn-lg">  <span  class="glyphicon glyphicon-edit"></span>
-          </button>
-    </span>
-
+      <button ng-click='editMode=!editMode' class="btn btn-default   btn-lg">  <span  class="glyphicon glyphicon-edit"></span>
+            </button>
+      </span>
 <div>
-    <form ng-show="editMode"  ng-submit="addSection($event)">
-      <input type="text" class='sectionText' ng-model="newSection" placeholder="add section" />
+  <button ng-show="editMode" type="submit" ng-click=removeSection() class="removeRight plusButton glyphicon glyphicon-remove"></button>
+  <form ng-show="editMode"  ng-submit="addSection($event)">
+      <input type="text" class='sectionText form' ng-model="newSection" placeholder="add section" />
       <button type="submit" class="plusButton glyphicon glyphicon-plus"></button>
     </form>
 
-    <button ng-show="editMode" type="submit" ng-click=removeSection() class="editRight plusButton glyphicon glyphicon-remove"></button>
   </div>
     <span   ng-show="editMode&&currentSection" ng-click="moveSectionUp()" class="glyphicon glyphicon-chevron-left"></span>
 
     <span  ng-show="editMode&&currentSection<sections.length-1" ng-click="moveSectionDown()" class="glyphicon glyphicon-chevron-right"></span>
 
     <form ng-show="editMode"  ng-submit="addItem($event)">
-      <input class='sectionText' type="text" ng-model="newItem" placeholder="add item" />
+      <input class='sectionText form' type="text" ng-model="newItem" placeholder="add item" />
       <button type="submit" class="plusButton glyphicon glyphicon-plus"></button>
     </form>
        <ul  ng-model="sections">

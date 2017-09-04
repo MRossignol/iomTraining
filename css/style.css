@@ -104,6 +104,11 @@ td {
      height:15vmin;
   }
 
+  .removeRight {
+      display:inline;
+       float:right;
+    }
+
   .plusButton {font-size: 6vmin;}
 
 .rzsliderDiv {padding-top:20px}
@@ -121,7 +126,7 @@ td {
 }
 
 .color-green-text  {
-background-color: green;
+ color: green;
 }
 
 .color-blue-text  {
@@ -130,4 +135,12 @@ background-color: green;
 
 .color-red-text {
   color:red;
+}
+
+.form {
+          vertical-align: middle;
+}
+
+.plusButton {
+          vertical-align: middle;
 }
