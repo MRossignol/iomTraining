@@ -6,12 +6,15 @@ app.controller("iomController", ['$scope', '$timeout', '$interval', '$window', '
   var uttId = 0;
   var messages = [];
 
+  //  var server = "http://soundthings.org";
+   var server = "http://localhost";
 
   $scope.newSeries = function() {
     $scope.series.preStart = 0;
     $scope.series.upWind = 0;
     $scope.series.downWind = 0;
-    $scope.series.races = []
+    $scope.series.races = [];
+    sendSeries();
   }
 
   $scope.series = [];
@@ -41,14 +44,13 @@ app.controller("iomController", ['$scope', '$timeout', '$interval', '$window', '
   $scope.leftClick = false;
   $scope.soundDisplay = 2;
 
-//  var server = "http://soundthings.org";
- var server = "http://localhost";
+
 
 function sendSeries(){
   var toto = {titi: 1, tata: 0};
   console.log($scope.series);
   console.log('sending series '+JSON.stringify($scope.series));
-  $http.get(server+":4000/sendSeries", JSON.stringify($scope.series)).then(function(response) {
+  $http.get(server+":4000/sendSeries", $scope.series).then(function(response) {
 	    console.log("Answer from server"+response.data);
 	}, function(response) {
 	});
@@ -142,10 +144,7 @@ function sendSeries(){
       dk.icon = data.hourly.data[k].icon;
       $scope.weather.data.push(dk);
     }
-    console.log($scope.weather.data);
   }
-
-  //
 
   var startDurations = [117, 63, 0, 127];
   var noSleep = new NoSleep();
