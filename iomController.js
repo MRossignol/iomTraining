@@ -1,10 +1,11 @@
-app.controller("iomController", ['$scope', '$timeout', '$interval', '$window', '$q', 'darkSky', function($scope, $timeout, $interval, $window, $q, darkSky) {
+app.controller("iomController", ['$scope', '$timeout', '$interval', '$window', '$q', 'darkSky', '$http', function($scope, $timeout, $interval, $window, $q, darkSky, $http) {
   var audioContext = null;
   var meter = null;
   var timing = 0;
   var bufferLoader = null;
   var uttId = 0;
   var messages = [];
+
 
   $scope.newSeries = function() {
     $scope.series.preStart = 0;
@@ -39,6 +40,20 @@ app.controller("iomController", ['$scope', '$timeout', '$interval', '$window', '
   $scope.rightClick = false;
   $scope.leftClick = false;
   $scope.soundDisplay = 2;
+
+//  var server = "http://soundthings.org";
+ var server = "http://localhost";
+
+function sendSeries(){
+  var toto = {titi: 1, tata: 0};
+  console.log($scope.series);
+  console.log('sending series '+JSON.stringify($scope.series));
+  $http.get(server+":4000/sendSeries?series="+JSON.stringify($scope.series)).then(function(response) {
+	    console.log(response.data);
+	}, function(response) {
+	});
+}
+
 
   $scope.legSlider = {
     value: 2,
@@ -197,6 +212,8 @@ app.controller("iomController", ['$scope', '$timeout', '$interval', '$window', '
     $scope.series.preStart = Math.round($scope.series.preStart);
     $scope.series.upWind = Math.round($scope.series.upWind);
     $scope.series.downWind = Math.round($scope.series.downWind);
+console.log($scope.series);
+     sendSeries();
   }
 
   function speechUtteranceFunc() {

@@ -20,7 +20,7 @@ var currentSkillDay = new Date();
 var currentSeriesDay = new Date();
 var currentSeriesId = 0;
 
-app.get(('/getSeriesId', function (req, res) {
+app.get('/getSeriesId', function (req, res) {
   var newDay = new Date();
   if (newDay.toDateString() != currentDay.toDateString()) {
   currentDay = newDay;
@@ -34,10 +34,31 @@ app.get(('/getSeriesId', function (req, res) {
 })
 
 app.get('/sendSeries', function (req, res) {
-    var fileName = 'data/series/'+Date.now().toString()+currentSeriesId.toString()+'.json';
+  var newDay = new Date();
+  if (newDay.toDateString() != currentSeriesDay.toDateString()) {
+  currentSeriesDay = newDay;
+    currentSeriesId = 0;
+  }
+  else {
+    currentSeriesId++;
+  }
+
+    var fileName = 'data/series/'+currentSeriesDay.toDateString().replace(/\s/g, '_')+'_'+currentSeriesId.toString()+'.json';
     console.log("received Series");
     res.send(JSON.stringify(req.query));
     fs.writeFile(fileName, JSON.stringify(req.query));
+})
+
+app.get('/sendSkills', function (req, res) {
+  var newDay = new Date();
+  if (newDay.toDateString() != currentSkillDay.toDateString()) {
+  currentSkillDay = newDay;
+  }
+
+    var fileName = 'data/series/'+currentSeriesDay.toDateString().replace(/\s/g, '_')+'.json';
+    console.log("received Series");
+    res.send(req.query);
+    fs.writeFile(fileName, req.query);
 })
 
 app.get('/toto', function (req, res) {
