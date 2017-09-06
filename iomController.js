@@ -48,8 +48,8 @@ function sendSeries(){
   var toto = {titi: 1, tata: 0};
   console.log($scope.series);
   console.log('sending series '+JSON.stringify($scope.series));
-  $http.get(server+":4000/sendSeries?series="+JSON.stringify($scope.series)).then(function(response) {
-	    console.log(response.data);
+  $http.get(server+":4000/sendSeries", JSON.stringify($scope.series)).then(function(response) {
+	    console.log("Answer from server"+response.data);
 	}, function(response) {
 	});
 }
@@ -212,7 +212,6 @@ function sendSeries(){
     $scope.series.preStart = Math.round($scope.series.preStart);
     $scope.series.upWind = Math.round($scope.series.upWind);
     $scope.series.downWind = Math.round($scope.series.downWind);
-console.log($scope.series);
      sendSeries();
   }
 
@@ -277,12 +276,12 @@ console.log($scope.series);
 
 var scb = speechUtteranceFunc
     $timeout(scb, 5000);
- console.log('summary in 8 secs');
+// console.log('summary in 8 secs');
   }
   }
 
   function soundMessages(type, duration=0) {
-console.log('sound '+type);
+//console.log('sound '+type);
     if ($scope.soundDisplay) { // sound
        playSound();
 
@@ -316,7 +315,7 @@ if (type==0) {
 $timeout(function(){
   var msg = new SpeechSynthesisUtterance(message);
   window.speechSynthesis.speak(msg);
-  console.log('message '+message);
+//  console.log('message '+message);
 }, 1000);
       }
     }
